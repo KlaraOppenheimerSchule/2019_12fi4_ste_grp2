@@ -1,0 +1,95 @@
+:::
+UML
+:::
+
+
+Die folgenden Seiten definieren Aussagen des Pflichtenheftes mit Hilfe von UML-Diagrammen
+
+Use-Case-Diagramme
+==================
+
+
+.. uml::
+
+
+    left to right direction
+
+    Stationsverantortlicher --> (Login)
+
+    Stationsverantortlicher --> (Schülernr eingeben)
+
+    Schueler --> (Statistik ansehen)
+
+    System --> (Laufzettel generieren)
+    System --> (Klasse generieren)
+    System --> (Schülernummern pro Klasse generieren)
+    System --> (kranken/abwesenden Schüler austragen)
+    System --> (spätkommenden Schüler eintragen)
+    (spätkommenden Schüler eintragen) --> (kranken/abwesenden Schüler austragen) : extends
+    (Schülernr eingeben) .> (Login) : include
+    (Schülernummern pro Klasse generieren) .> (Klasse generieren) : extends
+    (Laufzettel generieren) .> (Schülernummern pro Klasse generieren) : extends
+
+
+
+
+Komponentendiagramm
+===================
+
+
+.. uml::
+
+    left to right direction
+
+    package "Frontend"{
+        [Vue]
+    }
+
+    package "Backend" {
+        REST -- [PHP/Node.js]
+    }
+
+    [Vue] --> REST : JSON
+
+    database "MySql" {
+    folder "SportApp" {
+        [Tables]
+        [Functions]
+    }
+    }
+
+    [PHP/Node.js] --> [Tables]
+
+
+
+
+
+Sequenzdiagramme
+================
+
+
+- SD Laufzettel generieren
+
+- SD Wettkampf eintragen erfolgreich
+
+  - putWettkampf(station_id, student_id)
+
+
+- SD Wettkampf eintragen failure
+
+
+
+
+Aktivitätsdiagramme
+====================
+
+
+
+Zustandsdiagramme
+=================
+
+
+
+
+
+

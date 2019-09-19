@@ -1,0 +1,18 @@
+========
+Sportapp
+========
+
+.. image:: ./media/frontpage.png
+   :align: center
+
+
+
+.. toctree::
+   :maxdepth: 2
+
+   lastenheft.rst
+   uml.rst
+   technische_doku.rst
+
+
+

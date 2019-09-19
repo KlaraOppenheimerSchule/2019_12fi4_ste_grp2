@@ -1,0 +1,120 @@
+:::::::::::::::::::::::
+Lastenheft zur SportApp
+:::::::::::::::::::::::
+
+
+Einleitung
+==========
+
+
+Die **SportApp** ist eine Anwendung zum Management des Sporttages der Klara-Oppenheimer-Schule. Dieser findet jährlich im Juli statt. Er besteht aus mehreren Stationen, die von Schülern besucht werden können. Im Schuljahr 2018/19 wurde dazu eine Anwendung mit Hilfe des python-Frameworks **Flask** und MongoDB geschrieben und erfolgreich verwendet. Die verwendete Technologie ist allerdings nur schwer erweiterbar, da das Wissen der Schüler nicht mehr vorhanden ist (der Quellcode allerdings schon).
+
+Die Anwendung soll folgende Funktionalitäten erfüllen.
+
+
+- Login/Authentifizierung
+- Schülerverwaltung
+- Stationsverwaltung
+- Wettkampfverwaltung
+- Laufzettelgenerierung
+- Grafische Darstellung der Wettkampfergebnisse online
+- Analyseverwaltung
+
+
+
+Infrastruktur
+=============
+
+Das zu schaffende System läuft innerhalb des Schulnetzwerkes der Klara-Oppenheimer-Schule. Ein Zugriff auf die Anwendung über das Internet wird vom Systemadministrator ermöglicht und ist nicht Teil des Projekts.
+
+Die Arbeitsgruppe hat allerdings die Lauffähigkeit der Anwendung zu gewährleisten.
+Dies kann durch Maßnahmen wie z.B. Docker, virtuelle Maschinen sichergestellt werden.
+
+Login/Authentifizierung/Sicherheit
+===================================
+
+
+- Die Stationsleiter haben sich über einen Login-Mechanismus zu authentifizieren.
+- Nach einer einstellbaren Zeit soll bei Inaktivität ein neues Einloggen notwendig werden.
+- Abgefragt wird ein individueller Username sowie ein Passwort.
+- Das Passwort und der Username werden vom System pro Station vorher vergeben und sind nicht änderbar.
+- Das Passwort muss verschlüsselt abgeegt werden.
+- Grundsätzlich sollte der Zugriff nur per verschlüsselten Verbindungen, z.B. https möglich sein.
+
+
+Klasse/Schülerverwaltung
+========================
+
+- Das System speichert für Klasse so viele Schülerdatensätze, wie laut Schulverwaltungsprogramm vorhanden sein müssen
+- Die Schüler werden lediglich mit einer 6-stelligen Ziffer anonymisiert dargestellt
+- Die Verbindung zwischen Schüler und seiner Klasse muss gegeben sein.
+- Die Klasse wird ihrem Klarnamen gespeichert.
+- Am Tage des Sportages kranke oder abwesende Schüler müssen vom System ausgetragen werden können.
+- Ausgetragene Schüler müssen jederzeit wieder eintragbar sein.
+
+
+Stationsverwaltung
+==================
+
+Die Station ist der Ort des Wettkampfes. Da Stationen unterschiedlich schwierig bzw. zeitintensiv sein können, werden Sie mit einer Punktezahl versehen. Die Punkte gehen in die Gesamtberechnung der Schüler-/Klassenpunkte mit ein.
+
+Das System hält sich folgende Informationen über eine Station vor.
+
+- Stationname
+- Stationsverantwortlicher (Name / Passwort)
+- Ort
+- Stationspunkte
+- blabla
+
+
+Laufzettelgenerierung
+======================
+
+Das System erzeugt für den Schultag einen sog. Laufzettel für jeden Schüler.
+Dieser wird nach Beendigung der Station dem Stationsverantortlichen vorgelegt
+Folgende Informationen sind auf dem Laufzettel darzustellen
+
+-
+- Station mit Name, Ort und Stempelfläche
+- Individuelle Schulernummer
+- QR-Code mit Link zu Statistiken des jeweiligen Schülers.
+
+Es sind bis zu xx Stationen pro Laufzettel vorzusehen.
+
+
+Wettkampfverwaltung
+===================
+
+Der Schüler legt nach abgeschlossenem Wetkampf den Laufzettel an der Station vor. Der Staionsverantwortliche zeichnet seine Station ab und trägt die Nummer des Schülers über das System ein. Die Zuordnung zur Station kann dabei bspweise über das Login erfolgen.
+
+Zur schnelleren Abarbeitung der Schüler können bis zu 4 Schülernummern gleichzeitig eingegeben werden.
+
+Das System merkt sich neben dem Stationsbesuch eines Schülers auch die Uhrzeit.
+Somit sind weitere Auswertungen denkbar.
+
+
+Darstellung der Wettkampfergebnisse
+===================================
+
+Das System zeigt zu jeder Zeit folgende Informationen grafisch an:
+
+- 3 besten Klassen
+- 3 besten Schülernummern
+
+Der Link im QR-Code des Laufzettels führt zu folgenden grafischen Informationen.
+
+- Eigene Gesamtpunktzahl
+- Besuchte Stationen
+- Stand innerhalb der Klasse
+- Stand innerhalb aller Schüler
+
+
+Analyseverwaltung
+=================
+
+Neben schüler- und klassenbezogenen Auswertungen sind weitere grafische Darstellungen sinnvoll.
+
+- Anzahl der Schüler pro Station
+- Abwesenheitsrate von Schülern pro Klasse
+- Aktiv-, Passivzeit der Schüler, Anzahl der Stationen im Zeitraum pro Schüler
+

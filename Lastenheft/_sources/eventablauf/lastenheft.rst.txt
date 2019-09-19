@@ -1,0 +1,28 @@
+::::::::::::::::::::::::::::::
+Lastenheft zur Eventverwaltung
+::::::::::::::::::::::::::::::
+
+Einleitung
+==========
+
+In der Klara-Oppenheimer-Schule werden häufig Veranstaltungen der verschiedensten Artern durchgeführt,die eine Planung und Zusammenarbeit zwischen verschiedenen Personen innerhalb/außerhalb des Schulbereichs erforderlich machen.
+
+Die Kommunikation zwischen diesen Personen wird zur Zeit über verschiedene Mechanismen abgewickelt, darunter beispielsweise mdl. Kommunikation und Email.
+
+Zur Koordinationszwecken wurde vor einiger Zeit ein Formular entwickelt, welches die beteiligten Personen bzw. Prozesse dokumentieren soll.
+
+Es hat folgendes Aussehen:
+
+.. image:: ./media/formular.png
+
+
+Dieses Formular soll die Grundlage sein für eine digitale Abbildung der notwendigen Informationen und Prozesse.
+
+Wichtig ist dabei nicht nur die Darstellung der Daten sondern auch das Nachvollziehen/Überprüfen des Prozesses. Idealerweise sollten die für die einzelnen Aufgaben verantwortlichen Personen
+
+- einen Hinweis erhalten (Fristen/Termine)
+- den Stand der Aufgabe dokumentieren
+- den Status der Erledigung dokumentieren.
+
+
+

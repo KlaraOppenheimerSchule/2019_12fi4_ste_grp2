@@ -1,0 +1,63 @@
+===================
+Programmierprojekte
+===================
+
+
+.. admonition:: — Edsger W. Dijkstra: On the nature of Computing Science
+
+    Simplicity is a great virtue but it requires hard work to achieve it and education to appreciate it. And to make matters worse: complexity sells better.
+
+
+
+.. seealso:: This is a simple **seealso** note. Other inline directive may be included (e.g., math :math:`\alpha`) but not al of them.
+
+.. topic:: Your Topic Title
+
+    Subsequent indented lines comprise
+    the body of the topic, and are
+    interpreted as body elements.
+
+
+.. toctree::
+      :maxdepth: 2
+
+      sportapp/toctree.rst
+      eventablauf/toctree.rst
+
+
+:::::::::::
+Zeitplanung
+:::::::::::
+
+Eine Woche
+
+
+Woche 1:
+========
+
+UML:
+
+UseCase (Notation)
+Sequenz (Notation)
+Stegreifaufgabe
+
+Woche 2
+=======
+
+UML:
+
+Aktivität (Notation)
+
+Vorstellung Projekt (Organisation)
+
+
+Woche 3:
+========
+
+Zustand (Notation)
+
+
+
+
+
+

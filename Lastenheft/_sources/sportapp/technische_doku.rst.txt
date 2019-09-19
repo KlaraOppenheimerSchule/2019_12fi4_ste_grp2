@@ -1,0 +1,36 @@
+:::::::::::::::
+Technische Doku
+:::::::::::::::
+
+
+.. TODO::
+
+    Has to be written
+
+
+
+
+
+Mockups
+=======
+
+
+Startseite
+----------
+
+
+Login
+-----
+
+
+Wettkampfeingabe
+----------------
+
+
+Fehler bei Stationsbesuch
+-------------------------
+
+
+
+
+
