@@ -1,11 +1,23 @@
 <template>
-  <div id="app">
-    <!-- TODO: Header hinzufügen -->
+  <ion-app id="app">
+    <IonHeader></IonHeader>
     <router-view />
     <!-- TODO: Footer hinzufügen -->
-  </div>
+  </ion-app>
 </template>
 
+<script>
+import IonHeader from "./components/IonHeader.vue";
+
+export default {
+  components: {
+    IonHeader
+  }
+};
+</script>
+
 <style lang="scss">
-//TODO: Ionic CSS einbinden
+:root {
+  --ion-color-primary: #ec880e;
+}
 </style>

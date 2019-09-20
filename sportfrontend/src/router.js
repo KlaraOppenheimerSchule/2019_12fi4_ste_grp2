@@ -1,18 +1,18 @@
 import Vue from "vue";
-import Router from "vue-router";
-import Main from "./views/Main.vue";
+import { IonicVueRouter } from "@ionic/vue";
+import Home from "./views/Home.vue";
 import StatsId from "./views/StatsId.vue";
 
-Vue.use(Router);
+Vue.use(IonicVueRouter);
 
-export default new Router({
+export default new IonicVueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes: [
     {
       path: "/",
-      name: "main",
-      component: Main
+      name: "home",
+      component: Home
     },
     {
       path: "/about",

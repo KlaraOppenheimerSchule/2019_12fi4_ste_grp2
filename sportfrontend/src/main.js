@@ -1,12 +1,13 @@
 import Vue from "vue";
+import Ionic from "@ionic/vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import "./registerServiceWorker";
-
-//TODO: Ionic4-vue einbinden für akkurate Repräsentation auf allen Geräten
+import "@ionic/core/css/core.css";
 
 Vue.config.productionTip = false;
+Vue.use(Ionic);
 
 new Vue({
   router,
