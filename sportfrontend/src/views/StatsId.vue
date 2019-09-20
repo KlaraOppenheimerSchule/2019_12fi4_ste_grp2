@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <ion-content class="main">
     <h1>Klara-Oppenheimer-Schule</h1>
     <div>
       <h2>Statistiken für Schüler</h2>
@@ -12,7 +12,7 @@
         Statistik #1
       </div>
     </div>
-  </div>
+  </ion-content>
 </template>
 
 <script>
