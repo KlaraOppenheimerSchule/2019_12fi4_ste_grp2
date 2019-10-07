@@ -32,21 +32,29 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-    <div></div>
-    TODO: Bibliothek für Statistiken einbinden. TODO: API für Statistikabfrage
-    schreiben.
-    <div>Statistik #1</div>
-    <div>Statistik #2</div>
+    TODO: Statistiken per API abfragen
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <BarChart propid="leeel"></BarChart>
+        </ion-col>
+        <ion-col>
+          <BarChart propid="laaal"></BarChart>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-content>
 </template>
 
 <script>
 import NumberInput from "@/components/NumberInput.vue";
+import BarChart from "@/components/BarChart.vue";
 
 export default {
   name: "home",
   components: {
-    NumberInput
+    NumberInput,
+    BarChart
   }
 };
 </script>

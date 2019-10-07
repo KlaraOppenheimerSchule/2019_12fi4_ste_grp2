@@ -5,9 +5,10 @@
         <ion-item>
           <ion-label position="floating">Schülernummer</ion-label>
           <ion-input
-            type="number"
+            type="tel"
             :value="val"
             @input="inputevent($event.target)"
+            maxlength="6"
           ></ion-input>
         </ion-item>
         <ion-text v-if="error" color="danger">Schülernummer nicht gültig</ion-text>
