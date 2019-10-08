@@ -102,6 +102,15 @@
     "watchPlugins": [
       "jest-watch-typeahead/filename",
       "jest-watch-typeahead/testname"
+    ],
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.{js,vue}",
+      "!src/main.js",
+      "!src/registerServiceWorker.js",
+      "!src/router.js",
+      "!src/store.js",
+      "!src/App.vue"
     ]
   },
   "jestSonar": {
