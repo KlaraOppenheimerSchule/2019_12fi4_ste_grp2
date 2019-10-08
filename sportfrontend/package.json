@@ -12,6 +12,7 @@
   "dependencies": {
     "chart.js": "^2.8.0",
     "core-js": "^2.6.5",
+    "jest-jenkins-reporter": "^1.0.2",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3",
@@ -87,6 +88,7 @@
     "transformIgnorePatterns": [
       "/node_modules/"
     ],
+    "testResultsProcessor": "jest-jenkins-reporter",
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1"
     },
@@ -101,5 +103,10 @@
       "jest-watch-typeahead/filename",
       "jest-watch-typeahead/testname"
     ]
+  },
+  "jestSonar": {
+    "reportPath": "reports",
+    "reportFile": "report.xml",
+    "indent": 4
   }
 }
