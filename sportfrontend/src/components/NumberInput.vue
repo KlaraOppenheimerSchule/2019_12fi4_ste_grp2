@@ -4,7 +4,7 @@
       <ion-col>
         <ion-item>
           <ion-label position="floating">Schülernummer</ion-label>
-          <ion-input
+          <ion-input class="numberInput"
             type="tel"
             :value="val"
             @input="inputevent($event.target)"
@@ -35,7 +35,7 @@ export default {
     },
     validateInput: function() {
       let validateVar = false;
-      if (this.val.length == 6) {
+      if (this.val.toString().length == 6) {
         validateVar = true;
       }
       return validateVar;
