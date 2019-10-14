@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<entity-mappings v="5.3" rws="_15710376909222" Pws="_15710376909222" cws="_15710376909222" thm="PMetroColorScheme" persistenceUnitName="DEFAULT_PU" sm="false" xs="false" id="_15710376909211" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm orm_2_1.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <entity compositePrimaryKeyClass="ClassPK" abs="false" class="Class" pclass="Entity_1" v="true" xre="false" m="false" rootElement="_15710376909211" id="_15710377162344">
+        <ath>l.klinger</ath>
+        <attributes>
+            <one-to-many own="true" collection-type="java.util.List" cit="java.util.ArrayList" connected-entity-id="_15710377346467" v="true" name="students" pname="schülers" id="_157103790320620"/>
+            <id attribute-type="Long" v="true" xvt="" name="id" id="_15710377162715">
+                <xwm/>
+                <xm/>
+                <generated-value strategy="DEFAULT"/>
+            </id>
+        </attributes>
+        <nq e="false" name="Class.findAll">
+            <query>Select e from Class e</query>
+        </nq>
+    </entity>
+    <entity compositePrimaryKeyClass="StudentPK" abs="false" class="Student" pclass="Entity_1" v="true" xre="false" m="false" rootElement="_15710376909211" id="_15710377346467">
+        <ath>l.klinger</ath>
+        <removedAttributes>
+            <i>studentCheckpointHistory</i>
+        </removedAttributes>
+        <attributes>
+            <id attribute-type="Long" v="true" xvt="" name="id" id="_15710377346478">
+                <xwm/>
+                <xm/>
+                <generated-value strategy="DEFAULT"/>
+            </id>
+        </attributes>
+        <nq e="false" name="Student.findAll">
+            <query>Select e from Student e</query>
+        </nq>
+    </entity>
+    <entity compositePrimaryKeyClass="CheckpointPK" abs="false" class="Checkpoint" pclass="Entity_1" v="true" xre="false" m="false" rootElement="_15710376909211" id="_157103774060810">
+        <ath>l.klinger</ath>
+        <removedAttributes>
+            <i>studentCheckpointHistory</i>
+        </removedAttributes>
+        <attributes>
+            <basic attribute-type="String" v="true" name="name" pname="attribute" id="_157103981326945"/>
+            <basic attribute-type="String" v="true" name="ort" pname="attribute" id="_157103981612546"/>
+            <basic attribute-type="String" v="true" name="punkte" pname="attribute" id="_157103982050947"/>
+            <many-to-one primaryKey="false" connected-entity-id="_157103881076336" v="true" name="user" id="_157103930711944"/>
+            <id attribute-type="Long" v="true" xvt="" name="id" id="_157103774060911">
+                <xwm/>
+                <xm/>
+                <generated-value strategy="DEFAULT"/>
+            </id>
+        </attributes>
+        <nq e="false" name="Checkpoint.findAll">
+            <query>Select e from Checkpoint e</query>
+        </nq>
+        <nq e="false" name="Checkpoint.findByName">
+            <query>Select c from Checkpoint c where c.name=:name</query>
+        </nq>
+        <nq e="false" name="Checkpoint.findByOrt">
+            <query>Select c from Checkpoint c where c.ort=:ort</query>
+        </nq>
+        <nq e="false" name="Checkpoint.findByPunkte">
+            <query>Select c from Checkpoint c where c.punkte=:punkte</query>
+        </nq>
+    </entity>
+    <entity compositePrimaryKeyClass="StudentCheckpointHistoryPK" abs="false" class="StudentCheckpointHistory" pclass="Entity_1" v="true" xre="false" m="false" rootElement="_15710376909211" id="_157103775550513">
+        <ath>l.klinger</ath>
+        <removedAttributes>
+            <i>checkpoint</i>
+            <i>student</i>
+        </removedAttributes>
+        <attributes>
+            <basic attribute-type="String" v="true" name="score" pname="attribute" id="_157103844475125">
+                <xwm/>
+                <xm/>
+            </basic>
+            <many-to-one optional="true" primaryKey="false" connected-entity-id="_157103774060810" v="true" xvt="" name="checkpoint" id="_157103877068833">
+                <xwm/>
+                <xm/>
+            </many-to-one>
+            <many-to-one primaryKey="false" connected-entity-id="_15710377346467" v="true" name="student" id="_157103878230435"/>
+            <id attribute-type="Long" v="true" xvt="" name="id" id="_157103775550614">
+                <xwm/>
+                <xm/>
+                <generated-value strategy="DEFAULT"/>
+            </id>
+        </attributes>
+        <nq e="false" name="StudentCheckpointHistory.findAll">
+            <query>Select e from StudentCheckpointHistory e</query>
+        </nq>
+        <nq e="false" name="StudentCheckpointHistory.findByScore">
+            <query>Select s from StudentCheckpointHistory s where s.score=:score</query>
+        </nq>
+    </entity>
+    <entity compositePrimaryKeyClass="UserPK" abs="false" class="User" pclass="Entity_1" v="true" xre="false" m="false" rootElement="_15710376909211" id="_157103881076336">
+        <ath>l.klinger</ath>
+        <removedAttributes>
+            <i>checkpoint</i>
+        </removedAttributes>
+        <attributes>
+            <basic attribute-type="String" v="true" name="name" pname="attribute" id="_157103891203141"/>
+            <basic attribute-type="String" v="true" name="password" pname="attribute" id="_157103893077542"/>
+            <id attribute-type="Long" v="true" name="id" id="_157103881076337">
+                <generated-value strategy="DEFAULT"/>
+            </id>
+        </attributes>
+        <nq e="false" name="User.findAll">
+            <query>Select e from User e</query>
+        </nq>
+        <nq e="false" name="User.findByName">
+            <query>Select u from User u where u.name=:name</query>
+        </nq>
+        <nq e="false" name="User.findByPassword">
+            <query>Select u from User u where u.password=:password</query>
+        </nq>
+    </entity>
+    <c/>
+    <wsl>
+        <ws n="Main" id="_15710376909222">
+            <i ref="_157103774060810" x="47" y="431"/>
+            <i ref="_157103881076336" x="156" y="234"/>
+            <i ref="_15710377162344" x="418" y="244"/>
+            <i ref="_157103775550513" x="262" y="431"/>
+            <i ref="_15710377346467" x="575" y="475"/>
+        </ws>
+    </wsl>
+</entity-mappings>
