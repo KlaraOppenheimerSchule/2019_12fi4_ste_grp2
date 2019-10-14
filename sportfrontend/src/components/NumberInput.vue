@@ -4,7 +4,8 @@
       <ion-col>
         <ion-item>
           <ion-label position="floating">Schülernummer</ion-label>
-          <ion-input class="numberInput"
+          <ion-input
+            class="numberInput"
             type="tel"
             :value="val"
             @input="inputevent($event.target)"
