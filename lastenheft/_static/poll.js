@@ -152,7 +152,7 @@ Poll.prototype.submitPoll = function() {
     if (! document.getElementById(`${this.divid}_sent`)) {
         $(this.pollForm).append(`<span id=${this.divid}_sent><strong>Thanks, your response has been recorded</strong></span>`);
     } else {
-        $(`#${this.divid}_sent`).html("<strong>Only Your last reponse is recorded</strong>")
+        $(`#${this.divid}_sent`).html("<strong>Only Your last response is recorded</strong>")
     }
 
     // show the results of the poll
