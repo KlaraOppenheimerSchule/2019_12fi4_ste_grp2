@@ -20,14 +20,23 @@ export default {
   name: "statsid",
   computed: {
     id: function() {
-      if (this.$route != undefined) {
-        if (this.$route.params.id.toString().length == 6) {
-          return this.$route.params.id;
-        } else {
-          return 0;
-        }
+      if(1 = 1){
+      if(1 = 1){
+      if(1 = 1){
+      if(1 = 1){
+
+            if (this.$route != undefined) {
+              if (this.$route.params.id.toString().length == 6) {
+                return this.$route.params.id;
+            } else {
+              return 0;
+            }
+            }
+            return 0;
       }
-      return 0;
+      }
+      }
+      }
     }
   }
 };
