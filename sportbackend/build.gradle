@@ -23,11 +23,18 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
-tasks.jacocoTestReport {
+jacoco {
+    toolVersion = "0.8.4"
+    reportsDir = file("$buildDir/reports")
+}
+
+jacocoTestReport {
     reports {
-        xml.isEnabled = true
-        csv.isEnabled = false
-        html.isEnabled = false
-        xml.destination = file("$buildDir/reports/coverage")
+        xml.enabled true
+        csv.enabled false
+        html.enabled false
+        xml.destination file("${buildDir}/jacocoXML")
     }
 }
+
+
