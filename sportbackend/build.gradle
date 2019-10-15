@@ -31,10 +31,13 @@ jacoco {
 jacocoTestReport {
     reports {
         xml.enabled true
-        csv.enabled false
-        html.enabled false
-        xml.destination file("${buildDir}/jacocoXML")
+        csv.enabled true
+        html.enabled true
+        xml.destination file("${buildDir}/reports.xml")
+        csv.destination file("${buildDir}/reports.csv")
+        html.destination file("${buildDir}/reports.html")
     }
 }
+
 
 
