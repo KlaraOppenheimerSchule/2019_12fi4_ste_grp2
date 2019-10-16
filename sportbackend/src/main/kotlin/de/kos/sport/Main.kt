@@ -1,5 +1,7 @@
 package de.kos.sport
 
+import java.io.File
+
 fun main() {
-    println("Wenn du diese Zeile siehst funktioniert alles!")
+    SportsApp.start()
 }
