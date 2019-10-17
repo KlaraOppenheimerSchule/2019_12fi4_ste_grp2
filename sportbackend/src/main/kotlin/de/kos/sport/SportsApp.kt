@@ -6,10 +6,17 @@ import spark.Spark
 object SportsApp {
     private const val SPARK_PORT = 8181
 
+    /**
+     * Starts the spark web server and configures it to provide the api endpoints
+     */
     fun start() {
+        //Init DBConnector at start before doing anything else
         DBConnector.init()
 
+        //Reconfigure spark to use another port
         Spark.port(SPARK_PORT)
+
+        //Define api endpoints
         Spark.get("/api") { req, res ->
             Spark.get("/stats") { req, res ->
                 //Toplist
