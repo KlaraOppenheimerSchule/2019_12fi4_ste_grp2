@@ -4,11 +4,12 @@ import de.kos.sport.database.DBConnector
 import spark.Spark
 
 object SportsApp {
+    private const val SPARK_PORT = 8181
 
     fun start() {
         DBConnector.init()
 
-        Spark.port(8181)
+        Spark.port(SPARK_PORT)
         Spark.get("/api") { req, res ->
             Spark.get("/stats") { req, res ->
                 //Toplist
@@ -35,5 +36,4 @@ object SportsApp {
             }
         }
     }
-
 }

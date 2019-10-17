@@ -12,9 +12,13 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 import kotlin.random.Random
 
+
 object Checkpoints : IntIdTable() {
-    val name = varchar("name", 255).uniqueIndex()
-    val location = varchar("location", 255)
+    private const val MAX_NAME_SIZE = 255
+    private const val MAX_LOCATION_SIZE = 255
+
+    val name = varchar("name", MAX_NAME_SIZE).uniqueIndex()
+    val location = varchar("location", MAX_LOCATION_SIZE)
     val score = integer("score")
     val user = reference("user", Users)
 }
@@ -52,8 +56,11 @@ class Class(id: EntityID<Int>) : IntEntity(id) {
 }
 
 object Users : IntIdTable() {
-    val name = varchar("name", 255).uniqueIndex()
-    val password = varchar("password", 255)
+    private const val MAX_NAME_SIZE = 255
+    private const val MAX_PASSWORD_SIZE = 255
+
+    val name = varchar("name", MAX_NAME_SIZE).uniqueIndex()
+    val password = varchar("password", MAX_PASSWORD_SIZE)
 }
 
 class User(id: EntityID<Int>) : IntEntity(id) {
@@ -78,6 +85,8 @@ class VisitedCheckpoint(id: EntityID<Int>) : IntEntity(id) {
 }
 
 object DBConnector {
+    private const val MIN_STUDENT_ID = 100000
+    private const val MAX_STUDENT_ID = 999999
 
     /**
      * Validates the given student id
@@ -92,7 +101,7 @@ object DBConnector {
      * @return the random student id
      */
     fun getRandomStudentId(): Int {
-        val studentId = Random.nextInt(100000, 999999)
+        val studentId = Random.nextInt(MIN_STUDENT_ID, MAX_STUDENT_ID)
 
         if (validateStudentId(studentId)) {
             return getRandomStudentId()
