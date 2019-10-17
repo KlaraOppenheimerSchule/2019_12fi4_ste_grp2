@@ -10,7 +10,6 @@ object SportsApp {
 
         Spark.port(8181)
         Spark.get("/api") { req, res ->
-
             Spark.get("/stats") { req, res ->
                 //Toplist
                 Spark.get("/top") { req, res ->

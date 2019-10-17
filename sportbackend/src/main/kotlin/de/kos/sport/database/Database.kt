@@ -10,9 +10,10 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
+import kotlin.random.Random
 
 object Checkpoints : IntIdTable() {
-    val name = varchar("name",255).uniqueIndex()
+    val name = varchar("name", 255).uniqueIndex()
     val location = varchar("location", 255)
     val score = integer("score")
     val user = reference("user", Users)
@@ -20,6 +21,7 @@ object Checkpoints : IntIdTable() {
 
 class Checkpoint(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<Checkpoint>(Checkpoints)
+
     var name by Checkpoints.name
     var location by Checkpoints.location
     var score by Checkpoints.score
@@ -33,8 +35,9 @@ object Students : IntIdTable() {
 
 class Student(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<Student>(Students)
+
     var studentId by Students.studentId
-    var studentClass by Class referencedOn Classes.id
+    var clazz by Class referencedOn Classes.id
 }
 
 object Classes : IntIdTable() {
@@ -43,8 +46,9 @@ object Classes : IntIdTable() {
 
 class Class(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<Class>(Classes)
+
     var score by Classes.score
-    val students by Student referrersOn Students.id
+    val students by Student referrersOn Students.studentClass
 }
 
 object Users : IntIdTable() {
@@ -54,6 +58,7 @@ object Users : IntIdTable() {
 
 class User(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<User>(Users)
+
     var name by Users.name
     var password by Users.password
 }
@@ -66,12 +71,72 @@ object VisitedCheckpoints : IntIdTable() {
 
 class VisitedCheckpoint(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<VisitedCheckpoint>(VisitedCheckpoints)
+
     var student by Student referencedOn Students.id
     var checkpoint by Checkpoint referencedOn Checkpoints.id
     var score by VisitedCheckpoints.score
 }
 
 object DBConnector {
+
+    /**
+     * Validates the given student id
+     * @return true if the student id is valid (already in use)
+     */
+    fun validateStudentId(studentId: Int): Boolean {
+        return transaction { !Student.find { Students.studentId eq studentId }.empty() }
+    }
+
+    /**
+     * Generates a random student id, that is not already in use
+     * @return the random student id
+     */
+    fun getRandomStudentId(): Int {
+        val studentId = Random.nextInt(100000, 999999)
+
+        if (validateStudentId(studentId)) {
+            return getRandomStudentId()
+        }
+
+        return studentId
+    }
+
+    fun createCheckpoint(name: String, location: String, score: Int, user: User): Checkpoint {
+        return transaction {
+            Checkpoint.new {
+                this.name = name
+                this.location = location
+                this.score = score
+                this.user = user
+            }
+        }
+    }
+
+    fun createStudent(clazz: Class): Student {
+        return transaction {
+            Student.new {
+                this.studentId = getRandomStudentId()
+                this.clazz = clazz
+            }
+        }
+    }
+
+    fun createClass(): Class {
+        return transaction {
+            Class.new {
+                this.score = 0
+            }
+        }
+    }
+
+    fun createUser(name: String, password: String): User {
+        return transaction {
+            User.new {
+                this.name = name
+                this.password = password
+            }
+        }
+    }
 
     fun init() {
         java.lang.Class.forName("org.postgresql.Driver")
