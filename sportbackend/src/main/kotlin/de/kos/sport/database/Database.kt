@@ -12,9 +12,17 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 import kotlin.random.Random
 
-
+/**
+ * Represents a indexed table of checkpoints
+ */
 object Checkpoints : IntIdTable() {
+    /**
+     * The max length for name
+     */
     private const val MAX_NAME_SIZE = 255
+    /**
+     * The max length for location
+     */
     private const val MAX_LOCATION_SIZE = 255
 
     val name = varchar("name", MAX_NAME_SIZE).uniqueIndex()
@@ -23,6 +31,9 @@ object Checkpoints : IntIdTable() {
     val user = reference("user", Users)
 }
 
+/**
+ * Represents a checkpoint row entity of the checkpoints table
+ */
 class Checkpoint(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<Checkpoint>(Checkpoints)
 
@@ -32,11 +43,17 @@ class Checkpoint(id: EntityID<Int>) : IntEntity(id) {
     var user by User referencedOn Users.id
 }
 
+/**
+ * Represents a indexed tale of students
+ */
 object Students : IntIdTable() {
     val studentId = integer("studentId")
     val studentClass = reference("class", Classes)
 }
 
+/**
+ * Represents a student row entity of the students table
+ */
 class Student(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<Student>(Students)
 
@@ -44,10 +61,16 @@ class Student(id: EntityID<Int>) : IntEntity(id) {
     var clazz by Class referencedOn Classes.id
 }
 
+/**
+ * Represents a indexed table of classes
+ */
 object Classes : IntIdTable() {
     val score = integer("score")
 }
 
+/**
+ * Represents a class row entity of the classes table
+ */
 class Class(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<Class>(Classes)
 
@@ -55,14 +78,26 @@ class Class(id: EntityID<Int>) : IntEntity(id) {
     val students by Student referrersOn Students.studentClass
 }
 
+/**
+ * Represents a indexed table of users
+ */
 object Users : IntIdTable() {
+    /**
+     * The max length for name
+     */
     private const val MAX_NAME_SIZE = 255
+    /**
+     * The max length for password
+     */
     private const val MAX_PASSWORD_SIZE = 255
 
     val name = varchar("name", MAX_NAME_SIZE).uniqueIndex()
     val password = varchar("password", MAX_PASSWORD_SIZE)
 }
 
+/**
+ * Represents a user row entity of the users table
+ */
 class User(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<User>(Users)
 
@@ -70,12 +105,18 @@ class User(id: EntityID<Int>) : IntEntity(id) {
     var password by Users.password
 }
 
+/**
+ * Represents a indexed table of visited checkpoints
+ */
 object VisitedCheckpoints : IntIdTable() {
     val student = reference("student", Students)
     val checkpoint = reference("checkpoint", Checkpoints)
     val score = integer("score")
 }
 
+/**
+ * Represents a visited checkpoint row entity of the visited checkpoints table
+ */
 class VisitedCheckpoint(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<VisitedCheckpoint>(VisitedCheckpoints)
 
@@ -84,8 +125,19 @@ class VisitedCheckpoint(id: EntityID<Int>) : IntEntity(id) {
     var score by VisitedCheckpoints.score
 }
 
+/**
+ * DBConnector initializes and provides the connection
+ * to the database and exposes basic database functions
+ * for data modifications and parsing
+ */
 object DBConnector {
+    /**
+     * The student id minimum
+     */
     private const val MIN_STUDENT_ID = 100000
+    /**
+     * The student id maximum
+     */
     private const val MAX_STUDENT_ID = 999999
 
     /**
@@ -110,6 +162,10 @@ object DBConnector {
         return studentId
     }
 
+    /**
+     * Creates and inserts a checkpoint
+     * @return the created checkpoint entity
+     */
     fun createCheckpoint(name: String, location: String, score: Int, user: User): Checkpoint {
         return transaction {
             Checkpoint.new {
@@ -121,6 +177,10 @@ object DBConnector {
         }
     }
 
+    /**
+     * Creates and inserts a student
+     * @return the created student entity
+     */
     fun createStudent(clazz: Class): Student {
         return transaction {
             Student.new {
@@ -130,6 +190,10 @@ object DBConnector {
         }
     }
 
+    /**
+     * Creates and inserts a class
+     * @return the created class entity
+     */
     fun createClass(): Class {
         return transaction {
             Class.new {
@@ -138,6 +202,10 @@ object DBConnector {
         }
     }
 
+    /**
+     * Creates and inserts a user
+     * @return the created user entity
+     */
     fun createUser(name: String, password: String): User {
         return transaction {
             User.new {
@@ -147,6 +215,9 @@ object DBConnector {
         }
     }
 
+    /**
+     * Initializes and configures the database driver and connection pool
+     */
     fun init() {
         java.lang.Class.forName("org.postgresql.Driver")
 
