@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.3.50'
     id 'jacoco'
+    id 'io.gitlab.arturbosch.detekt' version '1.1.1'
 }
 
 group 'de.kos'
@@ -9,6 +10,7 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
@@ -17,6 +19,11 @@ dependencies {
     testCompile "org.junit.jupiter:junit-jupiter-api:5.2.0"
     testCompile "org.junit.jupiter:junit-jupiter-params:5.2.0"
     testRuntime "org.junit.jupiter:junit-jupiter-engine:5.2.0"
+    compile 'com.sparkjava:spark-kotlin:1.0.0-alpha'
+    compile 'org.jetbrains.exposed:exposed:0.17.6'
+    compile 'com.zaxxer:HikariCP:3.4.1'
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.1.4'
+    implementation 'com.google.code.gson:gson:2.8.6'
 }
 
 compileKotlin {
@@ -34,5 +41,17 @@ jacocoTestReport {
         xml.enabled = true
         html.enabled = true
         xml.destination = file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+    }
+}
+
+detekt {
+    toolVersion = "1.1.1"
+    input = files("src/main/kotlin")
+    filters = ".*/resources/.*,.*/build/.*"
+
+    reports {
+        xml.enabled = true
+        xml.destination = file("build/detekt/report.xml")
+        html.enabled = true
     }
 }

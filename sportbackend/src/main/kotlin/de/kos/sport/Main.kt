@@ -1,6 +1,8 @@
 package de.kos.sport
 
+/**
+ * The programs entrypoint
+ */
 fun main() {
-    //Dies ist ein Test
-    println("Wenn du diese Zeile siehst funktioniert alles!")
+    SportsApp.start()
 }
