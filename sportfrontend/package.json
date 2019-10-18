@@ -105,7 +105,13 @@
       "jest-watch-typeahead/filename",
       "jest-watch-typeahead/testname"
     ],
-    "coverageReporters": ["json", "cobertura", "lcov", "text", "clover"],
+    "coverageReporters": [
+      "json",
+      "cobertura",
+      "lcov",
+      "text",
+      "clover"
+    ],
     "collectCoverage": true,
     "collectCoverageFrom": [
       "src/**/*.{js,vue}",
