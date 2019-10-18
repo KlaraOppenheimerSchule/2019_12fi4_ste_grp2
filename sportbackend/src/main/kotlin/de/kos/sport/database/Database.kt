@@ -49,6 +49,7 @@ class Checkpoint(id: EntityID<Int>) : IntEntity(id) {
 object Students : IntIdTable() {
     val studentId = integer("studentId")
     val studentClass = reference("class", Classes)
+    val score = integer("score").default(0)
 }
 
 /**
@@ -58,7 +59,12 @@ class Student(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<Student>(Students)
 
     var studentId by Students.studentId
-    var clazz by Class referencedOn Classes.id
+    var clazz by Class referencedOn Students.studentClass
+    var score by Students.score
+
+    override fun toString(): String {
+        return "{id: $studentId, score: $score}"
+    }
 }
 
 /**
@@ -123,115 +129,4 @@ class VisitedCheckpoint(id: EntityID<Int>) : IntEntity(id) {
     var student by Student referencedOn Students.id
     var checkpoint by Checkpoint referencedOn Checkpoints.id
     var score by VisitedCheckpoints.score
-}
-
-/**
- * DBConnector initializes and provides the connection
- * to the database and exposes basic database functions
- * for data modifications and parsing
- */
-object DBConnector {
-    /**
-     * The student id minimum
-     */
-    private const val MIN_STUDENT_ID = 100000
-    /**
-     * The student id maximum
-     */
-    private const val MAX_STUDENT_ID = 999999
-
-    /**
-     * Validates the given student id
-     * @return true if the student id is valid (already in use)
-     */
-    fun validateStudentId(studentId: Int): Boolean {
-        return transaction { !Student.find { Students.studentId eq studentId }.empty() }
-    }
-
-    /**
-     * Generates a random student id, that is not already in use
-     * @return the random student id
-     */
-    fun getRandomStudentId(): Int {
-        val studentId = Random.nextInt(MIN_STUDENT_ID, MAX_STUDENT_ID)
-
-        if (validateStudentId(studentId)) {
-            return getRandomStudentId()
-        }
-
-        return studentId
-    }
-
-    /**
-     * Creates and inserts a checkpoint
-     * @return the created checkpoint entity
-     */
-    fun createCheckpoint(name: String, location: String, score: Int, user: User): Checkpoint {
-        return transaction {
-            Checkpoint.new {
-                this.name = name
-                this.location = location
-                this.score = score
-                this.user = user
-            }
-        }
-    }
-
-    /**
-     * Creates and inserts a student
-     * @return the created student entity
-     */
-    fun createStudent(clazz: Class): Student {
-        return transaction {
-            Student.new {
-                this.studentId = getRandomStudentId()
-                this.clazz = clazz
-            }
-        }
-    }
-
-    /**
-     * Creates and inserts a class
-     * @return the created class entity
-     */
-    fun createClass(): Class {
-        return transaction {
-            Class.new {
-                this.score = 0
-            }
-        }
-    }
-
-    /**
-     * Creates and inserts a user
-     * @return the created user entity
-     */
-    fun createUser(name: String, password: String): User {
-        return transaction {
-            User.new {
-                this.name = name
-                this.password = password
-            }
-        }
-    }
-
-    /**
-     * Initializes and configures the database driver and connection pool
-     */
-    fun init() {
-        java.lang.Class.forName("org.postgresql.Driver")
-
-        val config = HikariConfig()
-        config.jdbcUrl = "jdbc:postgresql://exposed.flaflo.xyz:5432/sportsapp"
-        config.username = "postgres"
-        config.password = File(System.getProperty("user.dir") + "/database.pw").readText()
-        config.driverClassName = "org.postgresql.Driver"
-
-        val hikariDataSource = HikariDataSource(config)
-
-        Database.connect(hikariDataSource)
-        transaction {
-            SchemaUtils.create(Checkpoints, Users, Students, Classes, VisitedCheckpoints)
-        }
-    }
 }
