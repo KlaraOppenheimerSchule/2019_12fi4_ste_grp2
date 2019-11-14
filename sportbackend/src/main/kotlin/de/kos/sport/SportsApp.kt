@@ -33,9 +33,37 @@ object SportsApp {
         logger.debug { "Spark is listening to port $SPARK_PORT" }
         logger.info { "SportsApp started" }
 
+        Spark.path("/api") {
+            Spark.path("/stats") {
+                Spark.get("/top/:count1/student/:count2") { req, res ->
+                    val count1 = req.params(":count1").toInt()
+                    val count2 = req.params(":count2").toInt()
+
+                    val sb = StringBuilder().appendln("[")
+
+                    transaction {
+                        Student.all()
+                            .orderBy(Students.score to SortOrder.DESC)
+                            .limit(count1)
+                            .forEachIndexed { i, it ->
+                                sb.append(it)
+                                if (i < count1) {
+                                    sb.append(",")
+                                }
+                                sb.appendln()
+                            }
+                    }
+
+                    sb.appendln("]")
+
+                    res.body(sb.toString())
+                }
+            }
+        }
+
         //Define api endpoints
-        Spark.get("/api") { req, res ->
-            Spark.get("/stats") { req, res ->
+       /* Spark.path("/api") {
+            Spark.path("/stats") {
                 //Toplist
                 Spark.get("/top/:count") { req, res ->
                     val count = req.params(":count").toInt()
@@ -80,8 +108,6 @@ object SportsApp {
             //StudentId
             Spark.get("/class/:id") { req, res ->
             }
-
-            "Hello :)"
-        }
+        }*/
     }
 }
