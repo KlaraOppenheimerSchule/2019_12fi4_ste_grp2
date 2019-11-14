@@ -46,7 +46,7 @@ object SportsApp {
                             .orderBy(Students.score to SortOrder.DESC)
                             .limit(count1)
                             .forEachIndexed { i, it ->
-                                sb.append(it)
+                                sb.append(it.toString())
                                 if (i < count1) {
                                     sb.append(",")
                                 }
@@ -56,7 +56,7 @@ object SportsApp {
 
                     sb.appendln("]")
 
-                    res.body(sb.toString())
+                    sb.toString()
                 }
             }
         }
