@@ -1,5 +1,6 @@
 <template>
   <div class="chart">
+    <h2>{{ msg }}</h2>
     <canvas :id="propid" width="300" height="300"></canvas>
   </div>
 </template>
@@ -7,21 +8,30 @@
 <script>
 import Chart from "chart.js";
 export default {
-  props: ["propid"],
+  props: ["propid", "msg", "endpoint"],
   data() {
     return {
-      chart: null
+      chart: null,
+      data: []
     };
   },
+  methods: {
+    updateChart: function() {
+      let chart = this.chart;
+      //TODO: Update Chart based on API Data
+      return chart;
+    }
+  },
+  //TODO: Connect to API process.env.VUE_APP_API_URL + this.endpoint
   mounted() {
     let res = new Chart(this.propid, {
       type: "bar",
       data: {
-        labels: ["548934", "871544", "120563"],
+        labels: ["", "", ""],
         datasets: [
           {
             label: "Punkte",
-            data: [11, 12, 10],
+            data: [0, 0, 0],
             backgroundColor: [
               "rgba(255, 99, 132, 0.2)",
               "rgba(54, 162, 235, 0.2)",

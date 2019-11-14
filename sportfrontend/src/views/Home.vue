@@ -36,10 +36,18 @@
     <ion-grid>
       <ion-row>
         <ion-col>
-          <BarChart propid="leeel"></BarChart>
+          <BarChart
+            propid="statsclasses"
+            endpoint="stats/class/top/3"
+            msg="Top 3 Klassen"
+          ></BarChart>
         </ion-col>
         <ion-col>
-          <BarChart propid="laaal"></BarChart>
+          <BarChart
+            propid="statsstudents"
+            endpoint="stats/student/top/3"
+            msg="Top 3 Schüler"
+          ></BarChart>
         </ion-col>
       </ion-row>
     </ion-grid>
