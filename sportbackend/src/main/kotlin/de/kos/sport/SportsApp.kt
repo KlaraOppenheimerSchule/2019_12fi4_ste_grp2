@@ -35,9 +35,8 @@ object SportsApp {
 
         Spark.path("/api") {
             Spark.path("/stats") {
-                Spark.get("/top/:count1/student/:count2") { req, res ->
-                    val count1 = req.params(":count1").toInt()
-                    val count2 = req.params(":count2").toInt()
+                Spark.get("/top/student/:count") { req, res ->
+                    val count1 = req.params(":count").toInt()
 
                     val sb = StringBuilder().appendln("[")
 
