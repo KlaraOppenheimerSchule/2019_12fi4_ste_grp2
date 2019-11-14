@@ -41,14 +41,15 @@ object SportsApp {
                     val sb = StringBuilder().appendln("[")
 
                     transaction {
-                        Student.all()
+                        val students = Student.all()
                             .orderBy(Students.score to SortOrder.DESC)
                             .limit(count1)
-                            .forEachIndexed { i, it ->
+                        students.forEachIndexed { i, it ->
                                 sb.append(it.toString())
-                                if (i < count1 - 2) {
+                                if (i < students.count() - 1) {
                                     sb.append(",")
                                 }
+
                                 sb.appendln()
                             }
                     }
