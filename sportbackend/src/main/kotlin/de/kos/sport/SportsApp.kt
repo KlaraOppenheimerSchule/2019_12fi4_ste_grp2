@@ -37,7 +37,7 @@ object SportsApp {
         Spark.get("/api") { req, res ->
             Spark.get("/stats") { req, res ->
                 //Toplist
-                Spark.get("/top") { req, res ->
+                Spark.get("/top/:count") { req, res ->
                     val count = req.params(":count").toInt()
 
                     Spark.get("/student/:count") { req, res ->
@@ -80,6 +80,8 @@ object SportsApp {
             //StudentId
             Spark.get("/class/:id") { req, res ->
             }
+
+            "Hello :)"
         }
     }
 }
