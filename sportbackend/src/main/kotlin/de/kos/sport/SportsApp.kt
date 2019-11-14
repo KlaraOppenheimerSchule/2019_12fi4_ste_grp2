@@ -47,7 +47,7 @@ object SportsApp {
                             .limit(count1)
                             .forEachIndexed { i, it ->
                                 sb.append(it.toString())
-                                if (i < count1) {
+                                if (i < count1 - 1) {
                                     sb.append(",")
                                 }
                                 sb.appendln()
