@@ -7,6 +7,7 @@
 
 <script>
 import Chart from "chart.js";
+import axios from "axios";
 export default {
   props: ["propid", "msg", "endpoint"],
   data() {
@@ -16,10 +17,42 @@ export default {
     };
   },
   methods: {
-    updateChart: function() {
+    updateChart: function(labels, vals) {
       let chart = this.chart;
+        chart.data.labels = labels;
+        chart.data.datasets.forEach((dataset) => {
+          dataset.data = vals;
+        });
       //TODO: Update Chart based on API Data
-      return chart;
+      chart.update();
+    },
+    getApiData: function(){
+      let res = "";
+
+      if(this.endpoint != ""){
+
+        let apiurl = process.env.VUE_APP_API_URL + this.endpoint;
+
+        console.log(apiurl);
+
+        axios.get(apiurl).then((response) => {
+          let resdata = response.data;
+
+          console.log(resdata);
+          let labels = [];
+          let vals = [];
+          for(let i = 0; i < resdata.length; i++){
+            console.log(resdata[i])
+            labels.push(resdata[i].id);
+            vals.push(resdata[i].score);
+          }
+          console.log(labels);
+          console.log(vals);
+          this.updateChart(labels, vals);
+      })
+
+      }
+      return res;
     }
   },
   //TODO: Connect to API process.env.VUE_APP_API_URL + this.endpoint
@@ -58,9 +91,18 @@ export default {
         }
       }
     });
+    this.getApiData();
     this.chart = res;
   }
 };
 </script>
 
-<style scoped></style>
+<style scoped  lang="scss"> 
+
+  .chart{
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+</style>

@@ -9,15 +9,29 @@
       </div>
 
       <div>
-        Statistik #1
+      <ion-grid>
+        <ion-row>
+        <ion-col>
+          <BarChart
+            propid="statsstudents"
+            :endpoint="'stats/student/' + id"
+            :msg="'Position von Schüler ' + id"
+          ></BarChart>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
       </div>
     </div>
   </ion-content>
 </template>
 
 <script>
+import BarChart from "@/components/BarChart.vue";
 export default {
   name: "statsid",
+  components: {
+    BarChart
+  },
   computed: {
     id: function() {
       if (this.$route != undefined) {

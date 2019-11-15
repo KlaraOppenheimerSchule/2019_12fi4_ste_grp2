@@ -32,20 +32,19 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-    TODO: Statistiken per API abfragen
     <ion-grid>
       <ion-row>
-        <ion-col>
+        <!--<ion-col>
           <BarChart
             propid="statsclasses"
             endpoint="stats/class/top/3"
             msg="Top 3 Klassen"
           ></BarChart>
-        </ion-col>
+        </ion-col>-->
         <ion-col>
           <BarChart
             propid="statsstudents"
-            endpoint="stats/student/top/3"
+            endpoint="stats/top/student/3"
             msg="Top 3 Schüler"
           ></BarChart>
         </ion-col>
