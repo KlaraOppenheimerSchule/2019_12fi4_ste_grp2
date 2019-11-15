@@ -63,7 +63,7 @@ class Student(id: EntityID<Int>) : IntEntity(id) {
     var score by Students.score
 
     override fun toString(): String {
-        return "{ id: $studentId, score: $score }"
+        return "{ \"id\": $studentId, \"score\": $score }"
     }
 }
 
@@ -84,7 +84,7 @@ class Class(id: EntityID<Int>) : IntEntity(id) {
     val students by Student referrersOn Students.studentClass
 
     override fun toString(): String {
-        return "{ id: score: $score }"
+        return "{ \"id\": score: $score }"
     }
 }
 
