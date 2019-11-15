@@ -21,7 +21,7 @@ export default {
   --ion-color-primary: #ec880e;
 }
 
-ion-grid{
+ion-grid {
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;

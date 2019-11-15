@@ -9,17 +9,17 @@
       </div>
 
       <div>
-      <ion-grid>
-        <ion-row>
-        <ion-col>
-          <BarChart
-            propid="statsstudents"
-            :endpoint="'stats/student/' + id"
-            :msg="'Position von Schüler ' + id"
-          ></BarChart>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <BarChart
+                propid="statsstudents"
+                :endpoint="'stats/student/' + id"
+                :msg="'Position von Schüler ' + id"
+              ></BarChart>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </div>
     </div>
   </ion-content>
