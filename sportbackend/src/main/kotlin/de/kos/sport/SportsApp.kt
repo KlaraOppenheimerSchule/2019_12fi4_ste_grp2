@@ -61,13 +61,23 @@ object SportsApp {
                         val students = Student.all().orderBy(Students.score to SortOrder.DESC).toList()
 
                         val studentIndex = students.indexOf(student)
-                        val betterStudent = students[studentIndex - 1]
-                        val worseStudent = students[studentIndex + 1]
+
 
                         if (student != null) {
-                            sb.append(betterStudent.toString()).append(", ")
-                            sb.append(student.toString()).append(", ")
-                            sb.append(worseStudent.toString())
+                            if (students.size > 1) {
+                                val betterStudent = students[studentIndex - 1]
+                                sb.append(betterStudent.toString()).append(", ")
+                            }
+
+                            sb.append(student.toString())
+
+                            if (students.size <= studentIndex + 1) {
+                                sb.append(", ")
+                                val worseStudent = students[studentIndex + 1]
+                                sb.append(worseStudent.toString())
+                            }
+
+                            "" //Why?
                         } else {
                             sb.append("{ \"error\": \"Student not found\" }")
                         }
