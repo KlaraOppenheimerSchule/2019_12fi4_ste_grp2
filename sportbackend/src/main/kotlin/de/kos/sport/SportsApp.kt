@@ -58,16 +58,41 @@ object SportsApp {
 
                     transaction {
                         val student = Student.find { Students.studentId eq id }.firstOrNull()
+                        val students = Student.all().orderBy(Students.score to SortOrder.DESC).toList()
+
+                        val studentIndex = students.indexOf(student)
+                        val betterStudent = students[studentIndex - 1]
+                        val worseStudent = students[studentIndex + 1]
 
                         if (student != null) {
-                            sb.append(student.toString())
+                            sb.append(betterStudent.toString()).append(", ")
+                            sb.append(student.toString()).append(", ")
+                            sb.append(worseStudent.toString())
+                        } else {
+                            sb.append("{ \"error\": \"Student not found\" }")
                         }
                     }
                     sb.append("]")
 
                     sb.toString()
                 }
+                Spark.get("/class/:id") { req, res ->
+                    val sb = StringBuilder().append("[")
+                    val id = req.params(":id").toInt()
 
+                    transaction {
+                        val student = Student.find { Students.studentId eq id }.firstOrNull()
+
+                        if (student != null) {
+
+                        } else {
+                            sb.append("{ \"error\": \"Student not found\" }")
+                        }
+                    }
+                    sb.append("]")
+
+                    sb.toString()
+                }
                 Spark.get("/top/student/:count") { req, res ->
                     val count = req.params(":count").toInt()
 
