@@ -35,6 +35,22 @@ object SportsApp {
 
         Spark.path("/api") {
             Spark.path("/stats") {
+                Spark.get("/student/:id") { req, res ->
+                    val sb = StringBuilder().appendln("[")
+                    val id = req.params(":id").toInt()
+
+                    transaction {
+                        val student = Student.find { Students.studentId eq id }.firstOrNull()
+
+                        if (student != null) {
+                            sb.append(student.toString())
+                        }
+                    }
+                    sb.appendln("]")
+
+                    sb.toString()
+                }
+
                 Spark.get("/top/student/:count") { req, res ->
                     val count1 = req.params(":count").toInt()
 
