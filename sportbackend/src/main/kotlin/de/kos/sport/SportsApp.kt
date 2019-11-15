@@ -1,6 +1,5 @@
 package de.kos.sport
 
-import com.google.gson.GsonBuilder
 import de.kos.sport.database.DBConnector
 import de.kos.sport.database.Student
 import de.kos.sport.database.Students
@@ -8,6 +7,7 @@ import mu.KotlinLogging
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.transactions.transaction
 import spark.Spark
+import de.kos.sport.database.*
 
 object SportsApp {
 
@@ -35,8 +35,25 @@ object SportsApp {
 
         Spark.path("/api") {
             Spark.path("/stats") {
+                Spark.get("/top/class/:count") { req, res ->
+                    val sb = StringBuilder().append("[")
+                    val count = req.params(":count").toInt()
+
+                    val classes = Class.all()
+                        .orderBy(Classes.score to SortOrder.DESC)
+                        .limit(count)
+
+                    classes.forEachIndexed { i, it ->
+                        sb.append(it.toString())
+                        if (i < classes.count() - 1) {
+                            sb.append(", ")
+                        }
+                    }
+
+                    sb.toString()
+                }
                 Spark.get("/student/:id") { req, res ->
-                    val sb = StringBuilder().appendln("[")
+                    val sb = StringBuilder().append("[")
                     val id = req.params(":id").toInt()
 
                     transaction {
@@ -46,31 +63,29 @@ object SportsApp {
                             sb.append(student.toString())
                         }
                     }
-                    sb.appendln("]")
+                    sb.append("]")
 
                     sb.toString()
                 }
 
                 Spark.get("/top/student/:count") { req, res ->
-                    val count1 = req.params(":count").toInt()
+                    val count = req.params(":count").toInt()
 
-                    val sb = StringBuilder().appendln("[")
+                    val sb = StringBuilder().append("[")
 
                     transaction {
                         val students = Student.all()
                             .orderBy(Students.score to SortOrder.DESC)
-                            .limit(count1)
+                            .limit(count)
                         students.forEachIndexed { i, it ->
                                 sb.append(it.toString())
                                 if (i < students.count() - 1) {
-                                    sb.append(",")
+                                    sb.append(", ")
                                 }
-
-                                sb.appendln()
                             }
                     }
 
-                    sb.appendln("]")
+                    sb.append("]")
 
                     sb.toString()
                 }
