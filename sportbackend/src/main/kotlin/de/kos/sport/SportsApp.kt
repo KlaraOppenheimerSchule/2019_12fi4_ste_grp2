@@ -8,6 +8,8 @@ import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.transactions.transaction
 import spark.Spark
 import de.kos.sport.database.*
+import org.jetbrains.exposed.sql.select
+import java.lang.Exception
 
 object SportsApp {
 
@@ -53,53 +55,114 @@ object SportsApp {
                     sb.toString()
                 }
                 Spark.get("/student/:id") { req, res ->
-                    val sb = StringBuilder().append("[")
+                    val sb = StringBuilder()
                     val id = req.params(":id").toInt()
 
-                    transaction {
-                        val student = Student.find { Students.studentId eq id }.firstOrNull()
-                        val students = Student.all().orderBy(Students.score to SortOrder.DESC).toList()
+                    val students = transaction { Student.all().orderBy(Students.score to SortOrder.DESC).toList() }
+                    val student = students.find { it.studentId == id }
 
+                    if (student != null) {
                         val studentIndex = students.indexOf(student)
+                        val studentIterator1 = students.listIterator(studentIndex)
+                        val studentIterator2 = students.listIterator(studentIndex)
 
+                        val limit = 3
+                        var count = 1
 
-                        if (student != null) {
-                            if (students.size > 1) {
-                                val betterStudent = students[studentIndex - 1]
-                                sb.append(betterStudent.toString()).append(", ")
-                            }
-
-                            sb.append(student.toString())
-
-                            if (students.size <= studentIndex + 1) {
-                                sb.append(", ")
-                                val worseStudent = students[studentIndex + 1]
-                                sb.append(worseStudent.toString())
-                            }
-
-                            "" //Why?
-                        } else {
-                            sb.append("{ \"error\": \"Student not found\" }")
+                        if (studentIterator2.hasNext()) {
+                            studentIterator2.next()
                         }
+
+                        sb.append("[")
+
+                        if (studentIterator1.hasPrevious() && count < limit) {
+                            sb.append(studentIterator1.previous()).append(", ")
+
+                            count++
+                            if (!studentIterator2.hasNext() && studentIterator1.hasPrevious() && count < limit) {
+                                sb.append(studentIterator1.previous()).append(", ")
+                                count++
+                            }
+                        }
+
+                        sb.append(student)
+
+                        if (studentIterator2.hasNext() && count < limit) {
+                            sb.append(", ").append(studentIterator2.next())
+                            count++
+
+                            if (studentIterator2.hasNext() && count < limit) {
+                                sb.append(studentIterator2.next())
+                            }
+                        }
+
+                        sb.append("]")
+                    } else {
+                        sb.append("{ \"error\": \"Student not found\" }")
                     }
-                    sb.append("]")
 
                     sb.toString()
                 }
                 Spark.get("/class/:id") { req, res ->
-                    val sb = StringBuilder().append("[")
-                    val id = req.params(":id").toInt()
+                    val sb = StringBuilder()
 
-                    transaction {
-                        val student = Student.find { Students.studentId eq id }.firstOrNull()
+                    try {
+                        val id = req.params(":id").toInt()
+
+
+                        val student = transaction { Student.find { Students.studentId eq id }.firstOrNull() }
 
                         if (student != null) {
+                            val students = transaction {
+                                Student.wrapRows(
+                                    Students.select { Students.studentClass eq student.clazz.id }.orderBy(
+                                        Students.score to SortOrder.DESC
+                                    )
+                                ).toList()
+                            }
+
+                            val studentIndex = students.indexOf(students.find { it.studentId == id })
+                            val studentIterator1 = students.listIterator(studentIndex)
+                            val studentIterator2 = students.listIterator(studentIndex)
+
+                            val limit = 3
+                            var count = 1
+
+                            if (studentIterator2.hasNext()) {
+                                studentIterator2.next()
+                            }
+
+                            sb.append("[")
+
+                            if (studentIterator1.hasPrevious() && count < limit) {
+                                sb.append(studentIterator1.previous()).append(", ")
+
+                                count++
+                                if (!studentIterator2.hasNext() && studentIterator1.hasPrevious() && count < limit) {
+                                    sb.append(studentIterator1.previous()).append(", ")
+                                    count++
+                                }
+                            }
+
+                            sb.append(student)
+
+                            if (studentIterator2.hasNext() && count < limit) {
+                                sb.append(", ").append(studentIterator2.next())
+                                count++
+
+                                if (studentIterator2.hasNext() && count < limit) {
+                                    sb.append(studentIterator2.next())
+                                }
+                            }
+
+                            sb.append("]")
 
                         } else {
                             sb.append("{ \"error\": \"Student not found\" }")
                         }
+                    } catch(ex: Exception) {
+                        ex.printStackTrace()
                     }
-                    sb.append("]")
 
                     sb.toString()
                 }
@@ -113,11 +176,11 @@ object SportsApp {
                             .orderBy(Students.score to SortOrder.DESC)
                             .limit(count)
                         students.forEachIndexed { i, it ->
-                                sb.append(it.toString())
-                                if (i < students.count() - 1) {
-                                    sb.append(", ")
-                                }
+                            sb.append(it.toString())
+                            if (i < students.count() - 1) {
+                                sb.append(", ")
                             }
+                        }
                     }
 
                     sb.append("]")
@@ -126,54 +189,5 @@ object SportsApp {
                 }
             }
         }
-
-        //Define api endpoints
-       /* Spark.path("/api") {
-            Spark.path("/stats") {
-                //Toplist
-                Spark.get("/top/:count") { req, res ->
-                    val count = req.params(":count").toInt()
-
-                    Spark.get("/student/:count") { req, res ->
-                        logger.debug { "Incoming request to ${req.contextPath()}" }
-
-                        val sb = StringBuilder().appendln("[")
-
-                        transaction {
-                            Student.all()
-                                .orderBy(Students.score to SortOrder.DESC)
-                                .limit(count)
-                                .forEachIndexed { i, it ->
-                                    sb.append(it)
-                                    if (i < count) {
-                                        sb.append(",")
-                                    }
-                                    sb.appendln()
-                                }
-                        }
-
-                        sb.appendln("]")
-
-                        res.body(sb.toString())
-                    }
-
-                    Spark.get("/class/:count") { req, res ->
-                    }
-                }
-
-                //Personal stats StudentId
-                Spark.get("/student/:id") { req, res ->
-
-                }
-
-                //Class stats StudentId
-                Spark.get("/class/:id") { req, res ->
-                }
-            }
-
-            //StudentId
-            Spark.get("/class/:id") { req, res ->
-            }
-        }*/
     }
 }
