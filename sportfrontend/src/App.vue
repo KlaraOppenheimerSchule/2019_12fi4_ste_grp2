@@ -20,4 +20,10 @@ export default {
 :root {
   --ion-color-primary: #ec880e;
 }
+
+ion-grid {
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
 </style>

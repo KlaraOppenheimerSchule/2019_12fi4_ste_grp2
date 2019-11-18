@@ -52,4 +52,10 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped lang="scss">
+/*ion-grid{
+    max-width: 600px !important;
+    margin-right: auto;
+    margin-left: auto;
+  }*/
+</style>
