@@ -106,62 +106,57 @@ object SportsApp {
                 Spark.get("/class/:id") { req, res ->
                     val sb = StringBuilder()
 
-                    try {
-                        val id = req.params(":id").toInt()
+                    val id = req.params(":id").toInt()
 
+                    val student = transaction { Student.find { Students.studentId eq id }.firstOrNull() }
 
-                        val student = transaction { Student.find { Students.studentId eq id }.firstOrNull() }
+                    if (student != null) {
+                        val students = transaction {
+                            Student.wrapRows(
+                                Students.select { Students.studentClass eq student.clazz.id }.orderBy(
+                                    Students.score to SortOrder.DESC
+                                )
+                            ).toList()
+                        }
 
-                        if (student != null) {
-                            val students = transaction {
-                                Student.wrapRows(
-                                    Students.select { Students.studentClass eq student.clazz.id }.orderBy(
-                                        Students.score to SortOrder.DESC
-                                    )
-                                ).toList()
-                            }
+                        val studentIndex = students.indexOf(students.find { it.studentId == id })
+                        val studentIterator1 = students.listIterator(studentIndex)
+                        val studentIterator2 = students.listIterator(studentIndex)
 
-                            val studentIndex = students.indexOf(students.find { it.studentId == id })
-                            val studentIterator1 = students.listIterator(studentIndex)
-                            val studentIterator2 = students.listIterator(studentIndex)
+                        val limit = 3
+                        var count = 1
 
-                            val limit = 3
-                            var count = 1
+                        if (studentIterator2.hasNext()) {
+                            studentIterator2.next()
+                        }
 
-                            if (studentIterator2.hasNext()) {
-                                studentIterator2.next()
-                            }
+                        sb.append("[")
 
-                            sb.append("[")
+                        if (studentIterator1.hasPrevious() && count < limit) {
+                            sb.append(studentIterator1.previous()).append(", ")
 
-                            if (studentIterator1.hasPrevious() && count < limit) {
+                            count++
+                            if (!studentIterator2.hasNext() && studentIterator1.hasPrevious() && count < limit) {
                                 sb.append(studentIterator1.previous()).append(", ")
-
                                 count++
-                                if (!studentIterator2.hasNext() && studentIterator1.hasPrevious() && count < limit) {
-                                    sb.append(studentIterator1.previous()).append(", ")
-                                    count++
-                                }
                             }
+                        }
 
-                            sb.append(student)
+                        sb.append(student)
+
+                        if (studentIterator2.hasNext() && count < limit) {
+                            sb.append(", ").append(studentIterator2.next())
+                            count++
 
                             if (studentIterator2.hasNext() && count < limit) {
-                                sb.append(", ").append(studentIterator2.next())
-                                count++
-
-                                if (studentIterator2.hasNext() && count < limit) {
-                                    sb.append(studentIterator2.next())
-                                }
+                                sb.append(studentIterator2.next())
                             }
-
-                            sb.append("]")
-
-                        } else {
-                            sb.append("{ \"error\": \"Student not found\" }")
                         }
-                    } catch(ex: Exception) {
-                        ex.printStackTrace()
+
+                        sb.append("]")
+
+                    } else {
+                        sb.append("{ \"error\": \"Student not found\" }")
                     }
 
                     sb.toString()
