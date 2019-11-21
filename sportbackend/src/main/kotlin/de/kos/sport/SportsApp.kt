@@ -34,6 +34,22 @@ object SportsApp {
         logger.info { "SportsApp started" }
 
         Spark.path("/api") {
+            Spark.path("/class") {
+                Spark.get("/:id") { req, res ->
+                    val id = req.params(":id").toInt()
+                    val sb = StringBuilder().append("[")
+
+                    val student = transaction { Student.all().find { it.studentId == id } }
+
+                    if (student != null) {
+                        sb.append(student)
+                    } else {
+                        sb.append("{ \"error\": \"Student not found\" }")
+                    }
+
+                    sb.append("]").toString()
+                }
+            }
             Spark.path("/stats") {
                 Spark.get("/top/class/:count") { req, res ->
                     val sb = StringBuilder().append("[")
