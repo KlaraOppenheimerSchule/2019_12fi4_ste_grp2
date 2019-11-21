@@ -107,11 +107,6 @@ object SportsApp {
                     } else {
                       sb.append("{ \"error\": \"Student not found\" }")
                     }
-                    sb.append("<br>")
-                    students.forEach {
-                        sb.append(it.toString()).append("<br>")
-                    }
-
 
                     sb.toString()
                 }
