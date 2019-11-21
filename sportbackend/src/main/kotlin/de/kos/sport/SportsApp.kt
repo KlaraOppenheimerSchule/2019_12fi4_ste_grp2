@@ -76,13 +76,20 @@ object SportsApp {
                         sb.append("[")
 
                         if (studentIterator1.hasPrevious() && count < limit) {
-                            sb.append(studentIterator1.previous()).append(", ")
+                            val prev2 = studentIterator1.previous()
+                            var prev1: Student? = null
 
                             count++
                             if (!studentIterator2.hasNext() && studentIterator1.hasPrevious() && count < limit) {
-                                sb.append(studentIterator1.previous()).append(", ")
+                                prev1 = studentIterator1.previous()
                                 count++
                             }
+
+                            if (prev1 != null) {
+                                sb.append(prev1).append(", ")
+                            }
+
+                            sb.append(prev2).append(", ")
                         }
 
                         sb.append(student)
@@ -98,13 +105,47 @@ object SportsApp {
 
                         sb.append("]")
                     } else {
-                        sb.append("{ \"error\": \"Student not found\" }")
+                      sb.append("{ \"error\": \"Student not found\" }")
                     }
+                    sb.append("<br>")
+                    students.forEach {
+                        sb.append(it.toString()).append("<br>")
+                    }
+
 
                     sb.toString()
                 }
                 Spark.get("/class/:id") { req, res ->
-                    val sb = StringBuilder()
+
+                }
+                Spark.get("/top/student/:count") { req, res ->
+                    val count = req.params(":count").toInt()
+
+                    val sb = StringBuilder().append("[")
+
+                    transaction {
+                        val students = Student.all()
+                            .orderBy(Students.score to SortOrder.DESC)
+                            .limit(count)
+                        students.forEachIndexed { i, it ->
+                            sb.append(it.toString())
+                            if (i < students.count() - 1) {
+                                sb.append(", ")
+                            }
+                        }
+                    }
+
+                    sb.append("]")
+
+                    sb.toString()
+                }
+            }
+        }
+    }
+}
+
+/* UNUSED
+ val sb = StringBuilder()
 
                     val id = req.params(":id").toInt()
 
@@ -160,29 +201,4 @@ object SportsApp {
                     }
 
                     sb.toString()
-                }
-                Spark.get("/top/student/:count") { req, res ->
-                    val count = req.params(":count").toInt()
-
-                    val sb = StringBuilder().append("[")
-
-                    transaction {
-                        val students = Student.all()
-                            .orderBy(Students.score to SortOrder.DESC)
-                            .limit(count)
-                        students.forEachIndexed { i, it ->
-                            sb.append(it.toString())
-                            if (i < students.count() - 1) {
-                                sb.append(", ")
-                            }
-                        }
-                    }
-
-                    sb.append("]")
-
-                    sb.toString()
-                }
-            }
-        }
-    }
-}
+ */
