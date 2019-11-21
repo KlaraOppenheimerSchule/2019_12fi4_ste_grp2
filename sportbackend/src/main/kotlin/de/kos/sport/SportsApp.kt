@@ -8,8 +8,6 @@ import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.transactions.transaction
 import spark.Spark
 import de.kos.sport.database.*
-import org.jetbrains.exposed.sql.select
-import java.lang.Exception
 
 object SportsApp {
 
@@ -111,7 +109,65 @@ object SportsApp {
                     sb.toString()
                 }
                 Spark.get("/class/:id") { req, res ->
+                    val sb = StringBuilder()
 
+                    try {
+                        val id = req.params(":id").toInt()
+
+                        val classes = transaction { Class.all().orderBy(Classes.score to SortOrder.DESC).toList() }
+
+                        val clazz = classes.find { transaction { it.students.find { it.studentId == id } != null } }
+
+                        if (clazz != null) {
+                            val classIndex = classes.indexOf(clazz)
+                            val classIterator1 = classes.listIterator(classIndex)
+                            val classIterator2 = classes.listIterator(classIndex)
+
+                            val limit = 3
+                            var count = 1
+
+                            if (classIterator2.hasNext()) {
+                                classIterator2.next()
+                            }
+
+                            sb.append("[")
+
+                            if (classIterator1.hasPrevious() && count < limit) {
+                                val prev2 = classIterator1.previous()
+                                var prev1: Class? = null
+
+                                count++
+                                if (!classIterator2.hasNext() && classIterator1.hasPrevious() && count < limit) {
+                                    prev1 = classIterator1.previous()
+                                    count++
+                                }
+
+                                if (prev1 != null) {
+                                    sb.append(prev1).append(", ")
+                                }
+
+                                sb.append(prev2).append(", ")
+                            }
+
+                            sb.append(clazz)
+
+                            if (classIterator2.hasNext() && count < limit) {
+                                sb.append(", ").append(classIterator2.next())
+                                count++
+
+                                if (classIterator2.hasNext() && count < limit) {
+                                    sb.append(", ").append(classIterator2.next())
+                                }
+                            }
+
+                            sb.append("]")
+                        } else {
+                            sb.append("{ \"error\": \"Student not found\" }")
+                        }
+                    } catch (ex: Exception) {
+                        ex.printStackTrace()
+                    }
+                    sb.toString()
                 }
                 Spark.get("/top/student/:count") { req, res ->
                     val count = req.params(":count").toInt()
