@@ -99,13 +99,13 @@ object SportsApp {
                             count++
 
                             if (studentIterator2.hasNext() && count < limit) {
-                                sb.append(studentIterator2.next())
+                                sb.append(", ").append(studentIterator2.next())
                             }
                         }
 
                         sb.append("]")
                     } else {
-                      sb.append("{ \"error\": \"Student not found\" }")
+                        sb.append("{ \"error\": \"Student not found\" }")
                     }
 
                     sb.toString()
