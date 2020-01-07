@@ -63,7 +63,7 @@ class Student(id: EntityID<Int>) : IntEntity(id) {
     var score by Students.score
 
     override fun toString(): String {
-        return "{ \"id\": $studentId, \"score\": $score, \"class\": ${clazz.name}}"
+        return "{ \"id\": $studentId, \"score\": $score }"
     }
 }
 

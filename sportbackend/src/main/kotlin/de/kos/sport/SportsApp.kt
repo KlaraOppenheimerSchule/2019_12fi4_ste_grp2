@@ -8,6 +8,7 @@ import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.transactions.transaction
 import spark.Spark
 import de.kos.sport.database.*
+import java.lang.Exception
 
 object SportsApp {
 
@@ -42,7 +43,9 @@ object SportsApp {
                     val student = transaction { Student.all().find { it.studentId == id } }
 
                     if (student != null) {
-                        sb.append(student)
+                        transaction {
+                            sb.append(student.clazz)
+                        }
                     } else {
                         sb.append("{ \"error\": \"Student not found\" }")
                     }
