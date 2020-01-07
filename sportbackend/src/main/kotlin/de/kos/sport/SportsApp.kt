@@ -9,6 +9,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import spark.Spark
 import de.kos.sport.database.*
 import java.lang.Exception
+import java.util.*
 
 object SportsApp {
 
@@ -35,6 +36,63 @@ object SportsApp {
         logger.info { "SportsApp started" }
 
         Spark.path("/api") {
+            Spark.get("/user/:id") { req, res ->
+                val sb = StringBuilder()
+                val id = req.params(":id").toInt()
+
+                val user = transaction { User.all().find { it.id.value == id } }
+
+                sb.append("[")
+                if (user != null) {
+                    sb.append(user)
+                } else {
+                    sb.append("{ \"error\": \"User not found\" }")
+                }
+                sb.append("]")
+
+                sb.toString()
+            }
+            Spark.get("/validate/:token") { req, res ->
+                val sb = StringBuilder()
+                val token = req.params(":token")
+
+                val user = DBConnector.getUserFromToken(token)
+
+                sb.append("[")
+                if (user != null) {
+                    sb.append("{ \"user\": ${user.id}, \"valid\": ${DBConnector.validateToken(token)} }")
+                } else {
+                    sb.append("{ \"valid\": false }")
+                }
+                sb.append("]")
+
+                sb.toString()
+            }
+            Spark.path("/login") {
+                Spark.get("/*/*") { req, res ->
+                    val sb = StringBuilder().append("[")
+
+                    val username = req.splat()[0]
+                    val password = req.splat()[1]
+
+                    val user = transaction { User.all().find { it.name == username } }
+
+                    if (user != null) {
+                        if (user.password == password) {
+                            val token = UUID.randomUUID().toString().replace("-", "")
+                            DBConnector.refreshToken(user, token)
+                            sb.append("{ \"token\": \"$token\" }")
+                        } else {
+                            sb.append("{ \"error\": \"Invalid password\" }")
+                        }
+                    } else {
+                        sb.append("{ \"error\": \"User not found\" }")
+                    }
+
+                    sb.append("]")
+                    sb.toString()
+                }
+            }
             Spark.path("/class") {
                 Spark.get("/:id") { req, res ->
                     val id = req.params(":id").toInt()

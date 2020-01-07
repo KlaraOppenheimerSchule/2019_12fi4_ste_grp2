@@ -7,6 +7,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
+import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
 /**
@@ -23,6 +24,12 @@ object DBConnector {
      * The student id maximum
      */
     private const val MAX_STUDENT_ID = 999999
+
+    /**
+     * The session timeout in milliseconds
+     * Currently: 3 hours
+     */
+    private const val SESSION_TIMEOUT = 10800000L
 
     /**
      * Validates the given student id
@@ -100,6 +107,33 @@ object DBConnector {
                 this.password = password
             }
         }
+    }
+
+    /**
+     * @return the user using this token
+     */
+    fun getUserFromToken(token: String): User? {
+        return transaction { User.all().find { it.token == token } }
+    }
+
+    /**
+     * Refreshes the token of a user
+     * also resets the last login time
+     */
+    fun refreshToken(user: User, token: String) {
+        transaction {
+            user.token = token
+            user.lastLogin = System.currentTimeMillis()
+        }
+    }
+
+    /**
+     * @return true if the token is valid (has user and has no timeout)
+     */
+    fun validateToken(token: String): Boolean {
+        val user = getUserFromToken(token)
+
+        return user != null && System.currentTimeMillis() - transaction { user.lastLogin } < SESSION_TIMEOUT
     }
 
     /**

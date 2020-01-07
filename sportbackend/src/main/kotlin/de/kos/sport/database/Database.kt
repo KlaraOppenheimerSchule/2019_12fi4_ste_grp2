@@ -71,8 +71,13 @@ class Student(id: EntityID<Int>) : IntEntity(id) {
  * Represents a indexed table of classes
  */
 object Classes : IntIdTable() {
+    /**
+     * The max length for name
+     */
+    private const val MAX_NAME_SIZE = 255
+
     val score = integer("score")
-    val name = varchar("name", 255)
+    val name = varchar("name", MAX_NAME_SIZE)
 }
 
 /**
@@ -102,9 +107,16 @@ object Users : IntIdTable() {
      * The max length for password
      */
     private const val MAX_PASSWORD_SIZE = 255
+    /**
+     * The max length for tokens
+     */
+    private const val MAX_TOKEN_SIZE = 32
+
 
     val name = varchar("name", MAX_NAME_SIZE).uniqueIndex()
     val password = varchar("password", MAX_PASSWORD_SIZE)
+    val token = varchar("token", MAX_TOKEN_SIZE).nullable()
+    val lastLogin = long("lastlogin")
 }
 
 /**
@@ -115,6 +127,12 @@ class User(id: EntityID<Int>) : IntEntity(id) {
 
     var name by Users.name
     var password by Users.password
+    var token by Users.token
+    var lastLogin by Users.lastLogin
+
+    override fun toString(): String {
+        return "{ \"id\": ${this.id}, \"name\": \"$name\", \"lastlogin\": $lastLogin }"
+    }
 }
 
 /**
