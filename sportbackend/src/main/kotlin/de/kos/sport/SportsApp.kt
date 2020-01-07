@@ -70,6 +70,8 @@ object SportsApp {
                         }
                     }
 
+                    sb.append("]")
+
                     sb.toString()
                 }
                 Spark.get("/student/:id") { req, res ->
