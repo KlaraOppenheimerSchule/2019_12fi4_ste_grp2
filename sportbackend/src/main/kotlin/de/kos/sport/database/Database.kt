@@ -72,6 +72,7 @@ class Student(id: EntityID<Int>) : IntEntity(id) {
  */
 object Classes : IntIdTable() {
     val score = integer("score")
+    val name = varchar("name", 255)
 }
 
 /**
@@ -82,9 +83,10 @@ class Class(id: EntityID<Int>) : IntEntity(id) {
 
     var score by Classes.score
     val students by Student referrersOn Students.studentClass
+    val name by Classes.name
 
     override fun toString(): String {
-        return "{ \"id\": ${this.id}, \"score\": $score }"
+        return "{ \"id\": ${this.id}, \"name\": \"$name\", \"score\": $score }"
     }
 }
 
