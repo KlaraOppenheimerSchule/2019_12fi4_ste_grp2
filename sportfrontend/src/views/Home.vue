@@ -34,13 +34,13 @@
     </ion-grid>
     <ion-grid>
       <ion-row>
-        <!--<ion-col>
+        <ion-col>
           <BarChart
             propid="statsclasses"
-            endpoint="stats/class/top/3"
+            endpoint="stats/top/class/3"
             msg="Top 3 Klassen"
           ></BarChart>
-        </ion-col>-->
+        </ion-col>
         <ion-col>
           <BarChart
             propid="statsstudents"

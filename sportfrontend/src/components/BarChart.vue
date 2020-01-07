@@ -42,7 +42,11 @@ export default {
           let vals = [];
           for (let i = 0; i < resdata.length; i++) {
             console.log(resdata[i]);
-            labels.push(resdata[i].id);
+            if (resdata[i].name != undefined) {
+              labels.push(resdata[i].name);
+            } else {
+              labels.push(resdata[i].id);
+            }
             vals.push(resdata[i].score);
           }
           console.log(labels);
@@ -97,7 +101,7 @@ export default {
 
 <style scoped lang="scss">
 .chart {
-  max-width: 300px;
+  max-width: 299px;
   margin-left: auto;
   margin-right: auto;
 }
