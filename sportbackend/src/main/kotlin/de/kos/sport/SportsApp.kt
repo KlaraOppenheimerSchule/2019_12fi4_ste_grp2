@@ -163,40 +163,36 @@ object SportsApp {
             }
             Spark.path("/student") {
                 Spark.get("/create/*/*/*") { req, res ->
-                    try {
-                        val sb = StringBuilder().append("[")
+                    val sb = StringBuilder().append("[")
 
-                        val token = req.splat()[0]
-                        val classId = req.splat()[1].toIntOrNull()
-                        val studentCount: Int? = req.splat()[2].toIntOrNull()
+                    val token = req.splat()[0]
+                    val classId = req.splat()[1].toIntOrNull()
+                    val studentCount: Int? = req.splat()[2].toIntOrNull()
 
-                        if (studentCount == null) {
-                            sb.append("{ \"error\": \"Count needs to be an integer\" }")
-                        } else if (DBConnector.validateToken(token)) {
-                            val clazz = transaction { Class.find { Classes.id eq classId }.firstOrNull() }
-                            if (clazz != null) {
-                                sb.append("{ \"students\": [")
-                                for (i in 1..studentCount) {
-                                    val student = DBConnector.createStudent(clazz)
+                    if (studentCount == null) {
+                        sb.append("{ \"error\": \"Count needs to be an integer\" }")
+                    } else if (DBConnector.validateToken(token)) {
+                        val clazz = transaction { Class.find { Classes.id eq classId }.firstOrNull() }
+                        if (clazz != null) {
+                            sb.append("{ \"students\": [")
+                            for (i in 1..studentCount) {
+                                val student = DBConnector.createStudent(clazz)
 
-                                    sb.append(student.studentId)
+                                sb.append(student.studentId)
 
-                                    if (i < studentCount) {
-                                        sb.append(", ")
-                                    }
+                                if (i < studentCount) {
+                                    sb.append(", ")
                                 }
-                                sb.append("] }")
-                            } else {
-                                sb.append("{ \"error\": \"Class not found\" }")
                             }
+                            sb.append("] }")
                         } else {
-                            printInvalidTokenMessage(sb)
+                            sb.append("{ \"error\": \"Class not found\" }")
                         }
-                        sb.append("]").toString()
-                    } catch (ex: Exception) {
-                        ex.printStackTrace()
+                    } else {
+                        printInvalidTokenMessage(sb)
                     }
-
+                    
+                    sb.append("]").toString()
                 }
             }
             Spark.path("/stats") {
