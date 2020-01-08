@@ -32,6 +32,19 @@ object DBConnector {
     private const val SESSION_TIMEOUT = 10800000L
 
     /**
+     * Access level for normal admin users
+     */
+    const val ACCESS_LEVEL_NORMAL = 0
+    /**
+     * Access level for checkpoint admin users
+     */
+    const val ACCESS_LEVEL_CHECKPOINT = 1
+    /**
+     * Access level for global admin users
+     */
+    const val ACCESS_LEVEL_GLOBAL = 2
+
+    /**
      * Validates the given student id
      * @return true if the student id is valid (already in use)
      */
@@ -101,11 +114,13 @@ object DBConnector {
      * Creates and inserts a user
      * @return the created user entity
      */
-    fun createUser(name: String, password: String): User {
+    fun createUser(name: String, password: String, type: Int): User {
         return transaction {
             User.new {
                 this.name = name
                 this.password = password
+                this.type = type
+                this.lastLogin = 0
             }
         }
     }

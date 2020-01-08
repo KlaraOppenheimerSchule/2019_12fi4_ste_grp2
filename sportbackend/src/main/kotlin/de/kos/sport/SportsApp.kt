@@ -41,42 +41,72 @@ object SportsApp {
         logger.info { "SportsApp started" }
 
         Spark.path("/api") {
-            Spark.get("/user/:id") { req, res ->
-                val sb = StringBuilder()
-                val id = req.params(":id").toIntOrNull()
+            Spark.path("/user") {
+                Spark.get("/:id") { req, res ->
+                    val sb = StringBuilder()
+                    val id = req.params(":id").toIntOrNull()
 
-                val user = transaction { User.all().find { it.id.value == id } }
+                    val user = transaction { User.all().find { it.id.value == id } }
 
-                sb.append("[")
-                if (user != null) {
-                    sb.append(user)
-                } else {
-                    sb.append("{ \"error\": \"User not found\" }")
+                    sb.append("[")
+                    if (user != null) {
+                        sb.append(user)
+                    } else {
+                        sb.append("{ \"error\": \"User not found\" }")
+                    }
+                    sb.append("]")
+
+                    sb.toString()
                 }
-                sb.append("]")
+                Spark.get("/create/*/*/*") { req, res ->
+                    val sb = StringBuilder().append("[")
+                    val token = req.splat()[0]
+                    val username = req.splat()[1]
+                    val password = req.splat()[2]
 
-                sb.toString()
-            }
-            Spark.get("/validate/:token") { req, res ->
-                val sb = StringBuilder()
-                val token = req.params(":token")
+                    if (DBConnector.validateToken(token)) {
+                        val adminUser = DBConnector.getUserFromToken(token)!! //User is never null at this point
 
-                val user = DBConnector.getUserFromToken(token)
+                        if (adminUser.type == DBConnector.ACCESS_LEVEL_GLOBAL) {
+                            try {
+                                val user =
+                                    DBConnector.createUser(username, password, DBConnector.ACCESS_LEVEL_CHECKPOINT)
 
-                sb.append("[")
-                if (user != null) {
-                    sb.append("{ \"user\": ${user.id}, \"valid\": ${DBConnector.validateToken(token)} }")
-                } else {
-                    sb.append("{ \"valid\": false }")
+                                sb.append("{ \"user\": ${user.id} }")
+                            } catch (ex: Exception) {
+                                //The best way at the moment to detect if a user already exists when the query fails
+                                //without forcing an additional sql statement
+                                sb.append("{ \"error\": \"User already exists\" }")
+                            }
+                        } else {
+                            sb.append("{ \"error\": \"Insufficient permissions\" }")
+                        }
+                    } else {
+                        printInvalidTokenMessage(sb)
+                    }
+
+                    sb.append("]").toString()
                 }
-                sb.append("]")
+                Spark.get("/validate/:token") { req, res ->
+                    val sb = StringBuilder()
+                    val token = req.params(":token")
 
-                sb.toString()
+                    val user = DBConnector.getUserFromToken(token)
+
+                    sb.append("[")
+                    if (user != null) {
+                        sb.append("{ \"user\": ${user.id}, \"valid\": ${DBConnector.validateToken(token)} }")
+                    } else {
+                        sb.append("{ \"valid\": false }")
+                    }
+                    sb.append("]")
+
+                    sb.toString()
+                }
             }
             Spark.path("/login") {
                 Spark.get("/*/*") { req, res ->
                     val sb = StringBuilder().append("[")
-
                     val username = req.splat()[0]
                     val password = req.splat()[1]
 
@@ -94,8 +124,7 @@ object SportsApp {
                         sb.append("{ \"error\": \"User not found\" }")
                     }
 
-                    sb.append("]")
-                    sb.toString()
+                    sb.append("]").toString()
                 }
             }
             Spark.path("/class") {
