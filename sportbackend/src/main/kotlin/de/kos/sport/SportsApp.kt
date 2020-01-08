@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import spark.Spark
 import de.kos.sport.database.*
 import org.jetbrains.exposed.sql.select
-import java.lang.Exception
+import java.sql.SQLException
 import java.util.*
 
 object SportsApp {
