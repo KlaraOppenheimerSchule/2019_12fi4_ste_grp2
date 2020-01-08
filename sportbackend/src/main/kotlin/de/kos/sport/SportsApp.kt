@@ -73,7 +73,7 @@ object SportsApp {
                                     DBConnector.createUser(username, password, DBConnector.ACCESS_LEVEL_CHECKPOINT)
 
                                 sb.append("{ \"user\": ${user.id} }")
-                            } catch (ex: Exception) {
+                            } catch (ex: SQLException) {
                                 //The best way at the moment to detect if a user already exists when the query fails
                                 //without forcing an additional sql statement
                                 sb.append("{ \"error\": \"User already exists\" }")
