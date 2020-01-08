@@ -9,24 +9,20 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col>
-          
-        </ion-col>
+        <ion-col> </ion-col>
       </ion-row>
     </ion-grid>
   </ion-content>
 </template>
 
 <script>
-
 export default {
   name: "admin",
-  mounted: function(){
+  mounted: function() {
+    let token = this.$cookie.get("token");
+    let type = this.$cookie.get("type");
 
-    let token = this.$cookie.get('token');
-    let type = this.$cookie.get('type');
-
-    if(token == undefined || type == undefined){
+    if (token == undefined || type == undefined) {
       this.$router.push({ path: "login" });
     }
 

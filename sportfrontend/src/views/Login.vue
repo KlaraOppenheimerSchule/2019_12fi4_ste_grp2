@@ -71,7 +71,7 @@ export default {
         if (resdata[0].token != undefined) {
           this.$cookie.set("token", resdata[0].token, { expires: "1D" });
           this.$cookie.set("type", resdata[0].type, { expires: "1D" });
-          this.$store.commit('logIn');
+          this.$store.commit("logIn");
           this.redirectCookie();
         } else {
           this.error = resdata[0].error;
@@ -79,12 +79,13 @@ export default {
       });
     },
     redirectCookie: function() {
-      switch (this.$cookie.get("type")) {
-        case 2:
+      let cookieType = this.$cookie.get("type");
+      switch (cookieType) {
+        case "2":
           this.$router.push({ path: "admin" });
           break;
 
-        case 1:
+        case "1":
           this.$router.push({ path: "station" });
           break;
 

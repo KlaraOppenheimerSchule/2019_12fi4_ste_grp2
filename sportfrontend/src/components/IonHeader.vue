@@ -22,24 +22,23 @@ export default {
       let res = this.$store.state.loggedIn;
       return res;
     },
-    title: function(){
-      if(this.$store.state.loggedIn){
+    title: function() {
+      if (this.$store.state.loggedIn) {
         return "Logout";
-      }else{
+      } else {
         return "Login";
       }
     }
   },
   methods: {
-    loginOut: function(){
-      if(this.$store.state.loggedIn){
-        this.$cookie.delete('token');
-        this.$cookie.delete('type');
-        this.$store.commit('logOut');
-      }else{
+    loginOut: function() {
+      if (this.$store.state.loggedIn) {
+        this.$cookie.delete("token");
+        this.$cookie.delete("type");
+        this.$store.commit("logOut");
+      } else {
         this.$router.push({ path: "login" });
       }
-
     }
   }
 };
