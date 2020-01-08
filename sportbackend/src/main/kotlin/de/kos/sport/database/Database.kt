@@ -1,16 +1,9 @@
 package de.kos.sport.database
 
-import com.zaxxer.hikari.HikariConfig
-import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.IntIdTable
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.transactions.transaction
-import java.io.File
-import kotlin.random.Random
 
 /**
  * Represents a indexed table of checkpoints
@@ -88,7 +81,7 @@ class Class(id: EntityID<Int>) : IntEntity(id) {
 
     var score by Classes.score
     val students by Student referrersOn Students.studentClass
-    val name by Classes.name
+    var name by Classes.name
 
     override fun toString(): String {
         return "{ \"id\": ${this.id}, \"name\": \"$name\", \"score\": $score }"
@@ -102,21 +95,22 @@ object Users : IntIdTable() {
     /**
      * The max length for name
      */
-    private const val MAX_NAME_SIZE = 255
+    private const val MAX_NAME_LENGTH = 255
     /**
      * The max length for password
      */
-    private const val MAX_PASSWORD_SIZE = 255
+    private const val MAX_PASSWORD_LENGTH = 255
     /**
      * The max length for tokens
      */
-    private const val MAX_TOKEN_SIZE = 32
+    private const val MAX_TOKEN_LENGTH = 32
 
-
-    val name = varchar("name", MAX_NAME_SIZE).uniqueIndex()
-    val password = varchar("password", MAX_PASSWORD_SIZE)
-    val token = varchar("token", MAX_TOKEN_SIZE).nullable()
+    val name = varchar("name", MAX_NAME_LENGTH).uniqueIndex()
+    val password = varchar("password", MAX_PASSWORD_LENGTH)
+    val token = varchar("token", MAX_TOKEN_LENGTH).nullable()
     val lastLogin = long("lastlogin")
+
+    val type = integer("type")
 }
 
 /**
@@ -130,8 +124,10 @@ class User(id: EntityID<Int>) : IntEntity(id) {
     var token by Users.token
     var lastLogin by Users.lastLogin
 
+    var type by Users.type
+
     override fun toString(): String {
-        return "{ \"id\": ${this.id}, \"name\": \"$name\", \"lastlogin\": $lastLogin }"
+        return "{ \"id\": ${this.id}, \"name\": \"$name\", \"type\": $type, \"lastlogin\": $lastLogin }"
     }
 }
 

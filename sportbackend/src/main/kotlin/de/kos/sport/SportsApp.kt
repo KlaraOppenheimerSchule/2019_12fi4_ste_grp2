@@ -8,10 +8,15 @@ import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.transactions.transaction
 import spark.Spark
 import de.kos.sport.database.*
+import org.jetbrains.exposed.sql.select
 import java.lang.Exception
 import java.util.*
 
 object SportsApp {
+
+    //TODO Outsource endpoint handlers to external classes
+    //TODO Use json library to build json responses
+    //TODO Instead of using "Table.all()" create a proper select statement
 
     val logger = KotlinLogging.logger("SportsApp")
 
@@ -38,7 +43,7 @@ object SportsApp {
         Spark.path("/api") {
             Spark.get("/user/:id") { req, res ->
                 val sb = StringBuilder()
-                val id = req.params(":id").toInt()
+                val id = req.params(":id").toIntOrNull()
 
                 val user = transaction { User.all().find { it.id.value == id } }
 
@@ -81,7 +86,7 @@ object SportsApp {
                         if (user.password == password) {
                             val token = UUID.randomUUID().toString().replace("-", "")
                             DBConnector.refreshToken(user, token)
-                            sb.append("{ \"token\": \"$token\" }")
+                            sb.append("{ \"token\": \"$token\", \"type\": \"${user.type}\" }")
                         } else {
                             sb.append("{ \"error\": \"Invalid password\" }")
                         }
@@ -94,9 +99,25 @@ object SportsApp {
                 }
             }
             Spark.path("/class") {
-                Spark.get("/:id") { req, res ->
-                    val id = req.params(":id").toInt()
+                Spark.get("/create/*/*") { req, res ->
                     val sb = StringBuilder().append("[")
+
+                    val token = req.splat()[0]
+                    val className = req.splat()[1]
+
+                    if (DBConnector.validateToken(token)) {
+                        val generatedClass = DBConnector.createClass(className)
+                        sb.append("{ \"class\": ${generatedClass.id} }")
+                    } else {
+                        printInvalidTokenMessage(sb)
+                    }
+
+                    sb.append("]").toString()
+                }
+                Spark.get("/:id") { req, res ->
+                    val id = req.params(":id").toIntOrNull()
+                    val sb = StringBuilder().append("[")
+
 
                     val student = transaction { Student.all().find { it.studentId == id } }
 
@@ -111,22 +132,64 @@ object SportsApp {
                     sb.append("]").toString()
                 }
             }
+            Spark.path("/student") {
+                Spark.get("/create/*/*/*") { req, res ->
+                    try {
+                        val sb = StringBuilder().append("[")
+
+                        val token = req.splat()[0]
+                        val classId = req.splat()[1].toIntOrNull()
+                        val studentCount: Int? = req.splat()[2].toIntOrNull()
+
+                        if (studentCount == null) {
+                            sb.append("{ \"error\": \"Count needs to be an integer\" }")
+                        } else if (DBConnector.validateToken(token)) {
+                            val clazz = transaction { Class.find { Classes.id eq classId }.firstOrNull() }
+                            if (clazz != null) {
+                                sb.append("{ \"students\": [")
+                                for (i in 1..studentCount) {
+                                    val student = DBConnector.createStudent(clazz)
+
+                                    sb.append(student.studentId)
+
+                                    if (i < studentCount) {
+                                        sb.append(", ")
+                                    }
+                                }
+                                sb.append("] }")
+                            } else {
+                                sb.append("{ \"error\": \"Class not found\" }")
+                            }
+                        } else {
+                            printInvalidTokenMessage(sb)
+                        }
+                        sb.append("]").toString()
+                    } catch (ex: Exception) {
+                        ex.printStackTrace()
+                    }
+
+                }
+            }
             Spark.path("/stats") {
                 Spark.get("/top/class/:count") { req, res ->
                     val sb = StringBuilder().append("[")
-                    val count = req.params(":count").toInt()
+                    val count: Int? = req.params(":count").toIntOrNull()
 
-                    val classes = transaction {
-                        Class.all()
-                            .orderBy(Classes.score to SortOrder.DESC)
-                            .limit(count)
-                    }
+                    if (count == null) {
+                        sb.append("{ \"error\": \"Count needs to be an integer\" }")
+                    } else {
+                        val classes = transaction {
+                            Class.all()
+                                .orderBy(Classes.score to SortOrder.DESC)
+                                .limit(count)
+                        }
 
-                    transaction {
-                        classes.forEachIndexed { i, it ->
-                            sb.append(it.toString())
-                            if (i < classes.count() - 1) {
-                                sb.append(", ")
+                        transaction {
+                            classes.forEachIndexed { i, it ->
+                                sb.append(it.toString())
+                                if (i < classes.count() - 1) {
+                                    sb.append(", ")
+                                }
                             }
                         }
                     }
@@ -137,7 +200,7 @@ object SportsApp {
                 }
                 Spark.get("/student/:id") { req, res ->
                     val sb = StringBuilder()
-                    val id = req.params(":id").toInt()
+                    val id = req.params(":id").toIntOrNull()
 
                     val students = transaction { Student.all().orderBy(Students.score to SortOrder.DESC).toList() }
                     val student = students.find { it.studentId == id }
@@ -194,7 +257,7 @@ object SportsApp {
                 Spark.get("/class/:id") { req, res ->
                     val sb = StringBuilder()
 
-                    val id = req.params(":id").toInt()
+                    val id = req.params(":id").toIntOrNull()
 
                     val classes = transaction { Class.all().orderBy(Classes.score to SortOrder.DESC).toList() }
 
@@ -249,18 +312,22 @@ object SportsApp {
                     sb.toString()
                 }
                 Spark.get("/top/student/:count") { req, res ->
-                    val count = req.params(":count").toInt()
+                    val count: Int? = req.params(":count").toIntOrNull()
 
                     val sb = StringBuilder().append("[")
 
-                    transaction {
-                        val students = Student.all()
-                            .orderBy(Students.score to SortOrder.DESC)
-                            .limit(count)
-                        students.forEachIndexed { i, it ->
-                            sb.append(it.toString())
-                            if (i < students.count() - 1) {
-                                sb.append(", ")
+                    if (count == null) {
+                        sb.append("{ \"error\": \"Count needs to be an integer\" }")
+                    } else {
+                        transaction {
+                            val students = Student.all()
+                                .orderBy(Students.score to SortOrder.DESC)
+                                .limit(count)
+                            students.forEachIndexed { i, it ->
+                                sb.append(it.toString())
+                                if (i < students.count() - 1) {
+                                    sb.append(", ")
+                                }
                             }
                         }
                     }
@@ -272,63 +339,8 @@ object SportsApp {
             }
         }
     }
+
+    fun printInvalidTokenMessage(sb: StringBuilder) {
+        sb.append("{ \"error\": \"Token invalid\" }")
+    }
 }
-
-/* UNUSED
- val sb = StringBuilder()
-
-                    val id = req.params(":id").toInt()
-
-                    val student = transaction { Student.find { Students.studentId eq id }.firstOrNull() }
-
-                    if (student != null) {
-                        val students = transaction {
-                            Student.wrapRows(
-                                Students.select { Students.studentClass eq student.clazz.id }.orderBy(
-                                    Students.score to SortOrder.DESC
-                                )
-                            ).toList()
-                        }
-
-                        val studentIndex = students.indexOf(students.find { it.studentId == id })
-                        val studentIterator1 = students.listIterator(studentIndex)
-                        val studentIterator2 = students.listIterator(studentIndex)
-
-                        val limit = 3
-                        var count = 1
-
-                        if (studentIterator2.hasNext()) {
-                            studentIterator2.next()
-                        }
-
-                        sb.append("[")
-
-                        if (studentIterator1.hasPrevious() && count < limit) {
-                            sb.append(studentIterator1.previous()).append(", ")
-
-                            count++
-                            if (!studentIterator2.hasNext() && studentIterator1.hasPrevious() && count < limit) {
-                                sb.append(studentIterator1.previous()).append(", ")
-                                count++
-                            }
-                        }
-
-                        sb.append(student)
-
-                        if (studentIterator2.hasNext() && count < limit) {
-                            sb.append(", ").append(studentIterator2.next())
-                            count++
-
-                            if (studentIterator2.hasNext() && count < limit) {
-                                sb.append(studentIterator2.next())
-                            }
-                        }
-
-                        sb.append("]")
-
-                    } else {
-                        sb.append("{ \"error\": \"Student not found\" }")
-                    }
-
-                    sb.toString()
- */

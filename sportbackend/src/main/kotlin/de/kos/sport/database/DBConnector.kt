@@ -88,10 +88,11 @@ object DBConnector {
      * Creates and inserts a class
      * @return the created class entity
      */
-    fun createClass(): Class {
+    fun createClass(name: String): Class {
         return transaction {
             Class.new {
                 this.score = 0
+                this.name = name
             }
         }
     }
