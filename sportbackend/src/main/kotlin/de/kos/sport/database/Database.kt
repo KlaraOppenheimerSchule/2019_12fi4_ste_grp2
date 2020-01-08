@@ -43,6 +43,7 @@ object Students : IntIdTable() {
     val studentId = integer("studentId")
     val studentClass = reference("class", Classes)
     val score = integer("score").default(0)
+    val present = bool("present").default(true)
 }
 
 /**
@@ -54,6 +55,8 @@ class Student(id: EntityID<Int>) : IntEntity(id) {
     var studentId by Students.studentId
     var clazz by Class referencedOn Students.studentClass
     var score by Students.score
+
+    var present by Students.present
 
     override fun toString(): String {
         return "{ \"id\": $studentId, \"score\": $score }"
