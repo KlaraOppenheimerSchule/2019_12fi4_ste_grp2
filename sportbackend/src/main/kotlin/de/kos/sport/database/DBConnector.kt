@@ -66,7 +66,17 @@ object DBConnector {
         return studentId
     }
 
-    fun visitCheckpoint(student: Student, checkpoint: Checkpoint) {
+    /**
+     * Creates an entry in the table for visited checkpoints
+     */
+    fun visitCheckpoint(student: Student, checkpoint: Checkpoint, score: Int) {
+        transaction {
+            VisitedCheckpoint.new {
+                this.checkpoint = checkpoint
+                this.student = student
+                this.score = score
+            }
+        }
     }
 
     /**
