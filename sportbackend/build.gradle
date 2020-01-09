@@ -51,7 +51,7 @@ detekt {
     input = files("src/main/kotlin")
     filters = ".*/resources/.*,.*/build/.*"
 
-    config = files("src/resources/detekt.yml")
+    config = files("src/main/resources/detekt.yml")
     buildUponDefaultConfig = false
 
     reports {
