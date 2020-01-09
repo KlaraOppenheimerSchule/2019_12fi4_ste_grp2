@@ -37,5 +37,4 @@ class CreateUserRoute : Route {
 
         return sb.append("]").toString()
     }
-
 }

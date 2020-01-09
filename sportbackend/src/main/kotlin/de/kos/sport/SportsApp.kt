@@ -1,13 +1,6 @@
 package de.kos.sport
 
 import de.kos.sport.database.DBConnector
-import de.kos.sport.database.Student
-import de.kos.sport.database.Students
-import mu.KotlinLogging
-import org.jetbrains.exposed.sql.SortOrder
-import org.jetbrains.exposed.sql.transactions.transaction
-import spark.Spark
-import de.kos.sport.database.*
 import de.kos.sport.routes.`class`.ClassCreateRoute
 import de.kos.sport.routes.`class`.ClassRoute
 import de.kos.sport.routes.login.LoginRoute
@@ -19,12 +12,13 @@ import de.kos.sport.routes.student.StudentCreateRoute
 import de.kos.sport.routes.user.CreateUserRoute
 import de.kos.sport.routes.user.UserRoute
 import de.kos.sport.routes.user.ValidateRoute
-import java.sql.SQLException
+import mu.KotlinLogging
+import spark.Spark
 
 object SportsApp {
 
     //TODO Use json library to build json responses
-    //TODO Instead of using "Table.all()" create a proper select statement
+    //TODO Instead of using "Table.all()" create proper select statements
 
     val logger = KotlinLogging.logger("SportsApp")
 
@@ -45,8 +39,9 @@ object SportsApp {
         //Reconfigure spark to use another port
         Spark.port(SPARK_PORT)
 
-        logger.debug { "Spark is listening to port $SPARK_PORT" }
-        logger.info { "SportsApp started" }
+        logger.info { "Spark is listening to port $SPARK_PORT" }
+
+        logger.debug { "Registering routes" }
 
         //Register spark routes
         Spark.path("/api") {
@@ -72,5 +67,7 @@ object SportsApp {
                 Spark.get("/class/:id", StatsClassRoute())
             }
         }
+
+        logger.info { "SportsApp started" }
     }
 }
