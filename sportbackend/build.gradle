@@ -51,6 +51,9 @@ detekt {
     input = files("src/main/kotlin")
     filters = ".*/resources/.*,.*/build/.*"
 
+    config = files("src/resources/detekt.yml")
+    buildUponDefaultConfig = false
+
     reports {
         xml.enabled = true
         xml.destination = file("build/detekt/report.xml")
