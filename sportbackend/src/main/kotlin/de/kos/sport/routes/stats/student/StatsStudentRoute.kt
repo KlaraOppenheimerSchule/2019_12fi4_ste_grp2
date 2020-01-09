@@ -9,6 +9,13 @@ import spark.Response
 import spark.Route
 
 class StatsStudentRoute : Route {
+    companion object {
+        /**
+         *  The amount of classes to sample
+         */
+        private const val SAMPLE_LIMIT = 3
+    }
+
     override fun handle(req: Request, response: Response): Any {
         val sb = StringBuilder().append("[")
         val id = req.params(":id").toIntOrNull()
@@ -21,19 +28,18 @@ class StatsStudentRoute : Route {
             val studentIterator1 = students.listIterator(studentIndex)
             val studentIterator2 = students.listIterator(studentIndex)
 
-            val limit = 3
             var count = 1
 
             if (studentIterator2.hasNext()) {
                 studentIterator2.next()
             }
 
-            if (studentIterator1.hasPrevious() && count < limit) {
+            if (studentIterator1.hasPrevious() && count < SAMPLE_LIMIT) {
                 val prev2 = studentIterator1.previous()
                 var prev1: Student? = null
 
                 count++
-                if (!studentIterator2.hasNext() && studentIterator1.hasPrevious() && count < limit) {
+                if (!studentIterator2.hasNext() && studentIterator1.hasPrevious() && count < SAMPLE_LIMIT) {
                     prev1 = studentIterator1.previous()
                     count++
                 }
@@ -47,11 +53,11 @@ class StatsStudentRoute : Route {
 
             sb.append(student)
 
-            if (studentIterator2.hasNext() && count < limit) {
+            if (studentIterator2.hasNext() && count < SAMPLE_LIMIT) {
                 sb.append(", ").append(studentIterator2.next())
                 count++
 
-                if (studentIterator2.hasNext() && count < limit) {
+                if (studentIterator2.hasNext() && count < SAMPLE_LIMIT) {
                     sb.append(", ").append(studentIterator2.next())
                 }
             }
