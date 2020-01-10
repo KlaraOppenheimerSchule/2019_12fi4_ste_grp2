@@ -7,7 +7,7 @@ import spark.Route
 
 class ClassCreateRoute : Route {
     override fun handle(req: Request, response: Response): Any {
-        val sb = StringBuilder().append("[")
+        val sb = StringBuilder("[")
 
         val token = req.splat()[0]
         val className = req.splat()[1]

@@ -10,7 +10,7 @@ import java.util.*
 
 class LoginRoute : Route {
     override fun handle(req: Request, response: Response): Any {
-        val sb = StringBuilder().append("[")
+        val sb = StringBuilder("[")
         val username = req.splat()[0]
         val password = req.splat()[1]
 
@@ -18,9 +18,8 @@ class LoginRoute : Route {
 
         if (user != null) {
             if (user.password == password) {
-                val token = UUID.randomUUID().toString().replace("-", "")
-                DBConnector.refreshToken(user, token)
-                sb.append("{ \"token\": \"$token\", \"type\": \"${user.type}\" }")
+                val session = DBConnector.createSession(user)
+                sb.append("{ \"token\": \"${session.id}\", \"type\": \"${user.type}\" }")
             } else {
                 sb.append("{ \"error\": \"Invalid password\" }")
             }

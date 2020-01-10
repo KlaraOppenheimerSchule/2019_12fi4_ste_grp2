@@ -9,6 +9,8 @@ import de.kos.sport.routes.stats.student.StatsStudentRoute
 import de.kos.sport.routes.stats.top.`class`.StatsTopClassRoute
 import de.kos.sport.routes.stats.top.student.StatsTopStudentRoute
 import de.kos.sport.routes.student.StudentCreateRoute
+import de.kos.sport.routes.student.StudentPresentRoute
+import de.kos.sport.routes.student.StudentRoute
 import de.kos.sport.routes.user.CreateUserRoute
 import de.kos.sport.routes.user.UserRoute
 import de.kos.sport.routes.user.ValidateRoute
@@ -19,6 +21,7 @@ object SportsApp {
 
     //TODO Use json library to build json responses
     //TODO Instead of using "Table.all()" create proper select statements
+    //TODO Change json response format to "[ { success: true/false, message: "bla bla", data [ { user: 0 } ] } ]
 
     val logger = KotlinLogging.logger("SportsApp")
 
@@ -58,7 +61,9 @@ object SportsApp {
                 Spark.get("/:id", ClassRoute())
             }
             Spark.path("/student") {
+                Spark.get("/:id", StudentRoute())
                 Spark.get("/create/*/*/*", StudentCreateRoute())
+                Spark.get("/present/*/*/*", StudentPresentRoute())
             }
             Spark.path("/stats") {
                 Spark.get("/top/student/:count", StatsTopStudentRoute())

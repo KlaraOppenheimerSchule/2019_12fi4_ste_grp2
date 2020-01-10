@@ -2,12 +2,10 @@ package de.kos.sport.database
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import mu.KotlinLogging
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
-import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
 /**
@@ -130,26 +128,27 @@ object DBConnector {
                 this.name = name
                 this.password = password
                 this.type = type
-                this.lastLogin = 0
             }
         }
     }
 
     /**
-     * @return the user using this token
+     * @return the session using associated to this token
      */
-    fun getUserFromToken(token: String): User? {
-        return transaction { User.all().find { it.token == token } }
+    fun getSessionFromToken(token: String): Session? {
+        return transaction { Session.findById(token) }
     }
 
     /**
-     * Refreshes the token of a user
-     * also resets the last login time
+     * Creates a session for the given user
+     * @return the generated session token
      */
-    fun refreshToken(user: User, token: String) {
-        transaction {
-            user.token = token
-            user.lastLogin = System.currentTimeMillis()
+    fun createSession(user: User): Session {
+        return transaction {
+            Session.new {
+                this.user = user
+                this.time = System.currentTimeMillis()
+            }
         }
     }
 
@@ -157,9 +156,70 @@ object DBConnector {
      * @return true if the token is valid (has user and has no timeout)
      */
     fun validateToken(token: String): Boolean {
-        val user = getUserFromToken(token)
+        return validateSession(getSessionFromToken(token))
+    }
 
-        return user != null && System.currentTimeMillis() - transaction { user.lastLogin } < SESSION_TIMEOUT
+    /**
+     * @return true if the session is valid (has user and has no timeout)
+     */
+    fun validateSession(session: Session?): Boolean {
+        return session != null && System.currentTimeMillis() - transaction { session.time } < SESSION_TIMEOUT
+    }
+
+    /**
+     * @return the user handle by id
+     */
+    fun getUserById(id: Int): User? {
+        return transaction { User.all().find { it.id.value == id } }
+    }
+
+    /**
+     * @return the user handle by name
+     */
+    fun getUserByName(name: String): User? {
+        return transaction { User.all().find { it.name == name } }
+    }
+
+    /**
+     * @return the student handle by index id
+     */
+    fun getStudentById(id: Int): Student? {
+        return transaction { Student.all().find { it.id.value == id } }
+    }
+
+    /**
+     * @return the student handle by student id
+     */
+    fun getStudentByStudentId(studentId: Int): Student? {
+        return transaction { Student.all().find { it.studentId == studentId } }
+    }
+
+    /**
+     * @return the checkpoint handle by id
+     */
+    fun getCheckpointById(id: Int): Checkpoint? {
+        return transaction { Checkpoint.all().find { it.id.value == id } }
+    }
+
+    /**
+     * @return the checkpoint handle by name
+     */
+    fun getCheckpointByName(name: String): Checkpoint? {
+        return transaction { Checkpoint.all().find { it.name == name } }
+    }
+
+    /**
+     * @return the class handle by id
+     */
+    fun getClassById(id: Int): Class? {
+        return transaction { Class.all().find { it.id.value == id } }
+    }
+
+    /**
+     * @return the class handle by name
+     */
+    fun getClassByName(name: String): Class? {
+        return transaction { Class.all().find { it.name == name } }
     }
 
     /**

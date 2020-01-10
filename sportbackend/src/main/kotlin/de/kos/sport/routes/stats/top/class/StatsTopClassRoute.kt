@@ -10,7 +10,7 @@ import spark.Route
 
 class StatsTopClassRoute : Route {
     override fun handle(req: Request, response: Response): Any {
-        val sb = StringBuilder().append("[")
+        val sb = StringBuilder("[")
         val count: Int? = req.params(":count").toIntOrNull()
 
         if (count == null) {

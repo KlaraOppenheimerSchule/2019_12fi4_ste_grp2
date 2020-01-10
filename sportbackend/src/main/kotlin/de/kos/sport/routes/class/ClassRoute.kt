@@ -9,7 +9,7 @@ import spark.Route
 class ClassRoute : Route {
     override fun handle(req: Request, response: Response): Any {
         val id = req.params(":id").toIntOrNull()
-        val sb = StringBuilder().append("[")
+        val sb = StringBuilder("[")
 
         val student = transaction { Student.all().find { it.studentId == id } }
 

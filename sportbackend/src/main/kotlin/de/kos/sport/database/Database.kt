@@ -1,9 +1,9 @@
 package de.kos.sport.database
 
-import org.jetbrains.exposed.dao.EntityID
-import org.jetbrains.exposed.dao.IntEntity
-import org.jetbrains.exposed.dao.IntEntityClass
-import org.jetbrains.exposed.dao.IntIdTable
+import org.jetbrains.exposed.dao.*
+import org.jetbrains.exposed.sql.Column
+import org.jetbrains.exposed.sql.Table
+import java.util.*
 
 /**
  * Represents a indexed table of checkpoints
@@ -40,7 +40,7 @@ class Checkpoint(id: EntityID<Int>) : IntEntity(id) {
  * Represents a indexed tale of students
  */
 object Students : IntIdTable() {
-    val studentId = integer("studentId")
+    val studentId = integer("studentId").primaryKey()
     val studentClass = reference("class", Classes)
     val score = integer("score").default(0)
     val present = bool("present").default(true)
@@ -103,15 +103,9 @@ object Users : IntIdTable() {
      * The max length for password
      */
     private const val MAX_PASSWORD_LENGTH = 255
-    /**
-     * The max length for tokens
-     */
-    private const val MAX_TOKEN_LENGTH = 32
 
     val name = varchar("name", MAX_NAME_LENGTH).uniqueIndex()
     val password = varchar("password", MAX_PASSWORD_LENGTH)
-    val token = varchar("token", MAX_TOKEN_LENGTH).nullable()
-    val lastLogin = long("lastlogin")
 
     val type = integer("type")
 }
@@ -124,14 +118,23 @@ class User(id: EntityID<Int>) : IntEntity(id) {
 
     var name by Users.name
     var password by Users.password
-    var token by Users.token
-    var lastLogin by Users.lastLogin
 
     var type by Users.type
 
     override fun toString(): String {
-        return "{ \"id\": ${this.id}, \"name\": \"$name\", \"type\": $type, \"lastlogin\": $lastLogin }"
+        return "{ \"id\": ${this.id}, \"name\": \"$name\", \"type\": $type }"
     }
+}
+
+/**
+ * Represents a visited checkpoint row entity of the visited checkpoints table
+ */
+class VisitedCheckpoint(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<VisitedCheckpoint>(VisitedCheckpoints)
+
+    var student by Student referencedOn Students.id
+    var checkpoint by Checkpoint referencedOn Checkpoints.id
+    var score by VisitedCheckpoints.score
 }
 
 /**
@@ -144,12 +147,27 @@ object VisitedCheckpoints : IntIdTable() {
 }
 
 /**
- * Represents a visited checkpoint row entity of the visited checkpoints table
+ * Represents a indexed table of sessions
  */
-class VisitedCheckpoint(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<VisitedCheckpoint>(VisitedCheckpoints)
+object Sessions : IdTable<String>() {
+    /**
+     * The max length for tokens
+     */
+    private const val MAX_TOKEN_LENGTH = 32
 
-    var student by Student referencedOn Students.id
-    var checkpoint by Checkpoint referencedOn Checkpoints.id
-    var score by VisitedCheckpoints.score
+    override val id: Column<EntityID<String>>
+        get() = varchar("token", MAX_TOKEN_LENGTH).primaryKey().clientDefault() { UUID.randomUUID().toString().replace("-", "") }.entityId()
+
+    val user = reference("user", Users)
+    val time = long("time")
+}
+
+/**
+ * Represents a session row entity of the session table
+ */
+class Session(id: EntityID<String>) : Entity<String>(id) {
+    companion object : EntityClass<String, Session>(Sessions)
+
+    var user by User referencedOn Users.id
+    var time by Sessions.time
 }

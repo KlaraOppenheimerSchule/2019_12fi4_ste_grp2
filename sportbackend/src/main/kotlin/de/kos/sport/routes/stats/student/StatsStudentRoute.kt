@@ -17,7 +17,7 @@ class StatsStudentRoute : Route {
     }
 
     override fun handle(req: Request, response: Response): Any {
-        val sb = StringBuilder().append("[")
+        val sb = StringBuilder("[")
         val id = req.params(":id").toIntOrNull()
 
         val students = transaction { Student.all().orderBy(Students.score to SortOrder.DESC).toList() }
