@@ -238,7 +238,7 @@ object DBConnector {
 
         Database.connect(hikariDataSource)
         transaction {
-            SchemaUtils.create(Checkpoints, Users, Students, Classes, VisitedCheckpoints)
+            SchemaUtils.create(Checkpoints, Users, Students, Classes, VisitedCheckpoints, Sessions)
         }
     }
 }
