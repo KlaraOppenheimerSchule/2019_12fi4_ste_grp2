@@ -6,6 +6,6 @@ import de.kos.sport.database.DBConnector
  * The programs entrypoint
  */
 fun main() {
-    DBConnector.init()
-    SportsApp.start()
+   DBConnector.init()
+   SportsApp.start()
 }

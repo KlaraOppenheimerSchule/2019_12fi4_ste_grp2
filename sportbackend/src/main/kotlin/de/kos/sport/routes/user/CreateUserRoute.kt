@@ -32,7 +32,7 @@ class CreateUserRoute : Route {
                 sb.append("{ \"error\": \"Insufficient permissions\" }")
             }
         } else {
-            sb.append("{ \"error\": \"Token invalid\" }")
+            sb.append("{ \"error\": \"Invalid Token\" }")
         }
 
         return sb.append("]").toString()

@@ -42,7 +42,7 @@ class StudentCreateRoute : Route {
                 }
             }
         } else {
-            sb.append("{ \"error\": \"Token invalid\" }")
+            sb.append("{ \"error\": \"Invalid Token\" }")
         }
 
         return sb.append("]").toString()

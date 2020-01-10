@@ -16,7 +16,7 @@ class ClassCreateRoute : Route {
             val generatedClass = DBConnector.createClass(className)
             sb.append("{ \"class\": ${generatedClass.id} }")
         } else {
-            sb.append("{ \"error\": \"Token invalid\" }")
+            sb.append("{ \"error\": \"Invalid Token\" }")
         }
 
         return sb.append("]").toString()
