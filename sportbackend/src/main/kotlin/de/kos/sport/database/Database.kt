@@ -167,6 +167,6 @@ object Sessions : IdTable<String>() {
 class Session(id: EntityID<String>) : Entity<String>(id) {
     companion object : EntityClass<String, Session>(Sessions)
 
-    var user by User referencedOn Users.id
+    var user by User referencedOn Sessions.user
     var time by Sessions.time
 }
