@@ -14,7 +14,8 @@ class ValidateRoute : Route {
         val session = DBConnector.getSessionFromToken(token)
 
         if (session != null) {
-            sb.append("{ \"user\": ${transaction { session.user.id }}, \"valid\": ${DBConnector.validateSession(session)} }")
+            sb.append("{ \"user\": ${transaction { session.user.id }}," +
+                    " \"valid\": ${DBConnector.validateSession(session)} }")
         } else {
             sb.append("{ \"valid\": false }")
         }
