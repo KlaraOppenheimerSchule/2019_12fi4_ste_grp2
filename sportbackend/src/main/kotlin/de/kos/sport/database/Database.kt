@@ -1,8 +1,6 @@
 package de.kos.sport.database
 
 import org.jetbrains.exposed.dao.*
-import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.Table
 import java.util.*
 
 /**
@@ -155,7 +153,10 @@ object Sessions : IdTable<String>() {
      */
     private const val MAX_TOKEN_LENGTH = 32
 
-    override val id = varchar("token", MAX_TOKEN_LENGTH).primaryKey().clientDefault() { UUID.randomUUID().toString().replace("-", "") }.entityId()
+    override val id =
+        varchar("token", MAX_TOKEN_LENGTH).primaryKey()
+            .clientDefault() { UUID.randomUUID().toString().replace("-", "") }
+            .entityId()
 
     val user = reference("user", Users)
     val time = long("time")
