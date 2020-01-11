@@ -9,23 +9,20 @@ import spark.Route
 class DestroyRoute : Route {
     override fun handle(req: Request, response: Response): Any {
         val sb = StringBuilder("[")
-        try {
-            val token = req.params(":token")
+        val token = req.params(":token")
 
-            val session = DBConnector.getSessionFromToken(token)
+        val session = DBConnector.getSessionFromToken(token)
 
-            if (session != null) {
-                transaction {
-                    session.delete()
-                }
-                //Use validate token to obtain a new session handle with updated values or null
-                sb.append("{ \"success\": ${DBConnector.validateToken(token)} }")
-            } else {
-                sb.append("{ \"error\": \"Invalid Token\" }")
+        if (session != null) {
+            transaction {
+                session.delete()
             }
-        } catch (ex: Exception) {
-            ex.printStackTrace()
+            //Use validate token to obtain a new session handle with updated values or null
+            sb.append("{ \"success\": ${DBConnector.validateToken(token)} }")
+        } else {
+            sb.append("{ \"error\": \"Invalid Token\" }")
         }
+
         return sb.append("]").toString()
     }
 }
