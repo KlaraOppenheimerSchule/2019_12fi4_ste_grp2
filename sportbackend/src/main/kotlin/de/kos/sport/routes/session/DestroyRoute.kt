@@ -18,7 +18,8 @@ class DestroyRoute : Route {
                 transaction {
                     session.delete()
                 }
-                sb.append("{ \"success\": ${!DBConnector.validateSession(session)}")
+                //Use validate token to obtain a new session handle with updated values or null
+                sb.append("{ \"success\": ${DBConnector.validateToken(token)} }")
             } else {
                 sb.append("{ \"error\": \"Invalid Token\" }")
             }
