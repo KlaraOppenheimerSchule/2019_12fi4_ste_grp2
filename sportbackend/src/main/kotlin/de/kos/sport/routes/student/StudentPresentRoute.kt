@@ -10,8 +10,8 @@ class StudentPresentRoute : Route {
     override fun handle(req: Request, response: Response): Any {
         val sb = StringBuilder("[")
         val token = req.splat()[0]
-        val studentId = req.splat()[1].toIntOrNull()
-        val present = "true" == req.splat()[2].orEmpty().toLowerCase()
+        val studentId = req.params(":id").toIntOrNull()
+        val present = "true" == req.splat()[1].orEmpty().toLowerCase()
 
         if (DBConnector.validateToken(token)) {
             val adminUser = DBConnector.getSessionFromToken(token)!!.user //User is never null at this point

@@ -3,6 +3,7 @@ package de.kos.sport
 import de.kos.sport.database.DBConnector
 import de.kos.sport.routes.`class`.ClassCreateRoute
 import de.kos.sport.routes.`class`.ClassRoute
+import de.kos.sport.routes.checkpoint.CheckpointRoute
 import de.kos.sport.routes.session.DestroyRoute
 import de.kos.sport.routes.session.LoginRoute
 import de.kos.sport.routes.stats.`class`.StatsClassRoute
@@ -49,6 +50,11 @@ object SportsApp {
 
         //Register spark routes
         Spark.path("/api") {
+            Spark.path("/checkpoint") {
+                Spark.get("/:id", CheckpointRoute())
+                Spark.get("/:id/visit/*", CheckpointRoute())
+                Spark.get("/:id/create/*/*/*", CheckpointRoute())
+            }
             Spark.path("/user") {
                 Spark.get("/:id", UserRoute())
                 Spark.get("/create/*/*/*", CreateUserRoute())
@@ -64,8 +70,8 @@ object SportsApp {
             }
             Spark.path("/student") {
                 Spark.get("/:id", StudentRoute())
+                Spark.get("/:id/present/*/*/*", StudentPresentRoute())
                 Spark.get("/create/*/*/*", StudentCreateRoute())
-                Spark.get("/present/*/*/*", StudentPresentRoute())
             }
             Spark.path("/stats") {
                 Spark.get("/top/student/:count", StatsTopStudentRoute())
