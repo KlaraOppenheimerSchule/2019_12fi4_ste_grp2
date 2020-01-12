@@ -6,7 +6,7 @@ import spark.Request
 import spark.Response
 import spark.Route
 
-class ValidateRoute : Route {
+class SessionDestroyRoute : Route {
     override fun handle(req: Request, response: Response): Any {
         val sb = StringBuilder("[")
         val token = req.params(":token")
@@ -14,10 +14,13 @@ class ValidateRoute : Route {
         val session = DBConnector.getSessionFromToken(token)
 
         if (session != null) {
-            sb.append("{ \"user\": ${transaction { session.user.id }}," +
-                    " \"valid\": ${DBConnector.validateSession(session)} }")
+            transaction {
+                session.delete()
+            }
+            //Use validate token to obtain a new session handle with updated values or null
+            sb.append("{ \"success\": ${DBConnector.validateToken(token)} }")
         } else {
-            sb.append("{ \"valid\": false }")
+            sb.append("{ \"error\": \"Invalid Token\" }")
         }
 
         return sb.append("]").toString()

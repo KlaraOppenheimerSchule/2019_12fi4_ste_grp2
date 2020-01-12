@@ -7,7 +7,7 @@ import spark.Request
 import spark.Response
 import spark.Route
 
-class LoginRoute : Route {
+class SessionCreateRoute : Route {
     override fun handle(req: Request, response: Response): Any {
         val sb = StringBuilder("[")
 
