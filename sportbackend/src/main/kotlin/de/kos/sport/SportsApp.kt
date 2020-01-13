@@ -4,7 +4,9 @@ import de.kos.sport.database.DBConnector
 import de.kos.sport.routes.`class`.ClassAllRoute
 import de.kos.sport.routes.`class`.ClassCreateRoute
 import de.kos.sport.routes.`class`.ClassRoute
+import de.kos.sport.routes.checkpoint.CheckpointCreateRoute
 import de.kos.sport.routes.checkpoint.CheckpointRoute
+import de.kos.sport.routes.checkpoint.CheckpointVisitRoute
 import de.kos.sport.routes.session.SessionCreateRoute
 import de.kos.sport.routes.session.SessionDestroyRoute
 import de.kos.sport.routes.session.SessionValidateRoute
@@ -53,9 +55,9 @@ object SportsApp {
         //Register spark routes
         Spark.path("/api") {
             Spark.path("/checkpoint") {
+                Spark.get("/create/*/*/*/*/*", CheckpointCreateRoute())
                 Spark.get("/:id", CheckpointRoute())
-                Spark.get("/:id/visit/*", CheckpointRoute())
-                Spark.get("/:id/create/*/*/*", CheckpointRoute())
+                Spark.get("/:id/visit/*", CheckpointVisitRoute())
             }
             Spark.path("/user") {
                 Spark.get("/:id", UserRoute())

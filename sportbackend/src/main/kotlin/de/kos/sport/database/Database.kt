@@ -32,10 +32,10 @@ class Checkpoint(id: EntityID<Int>) : IntEntity(id) {
     var name by Checkpoints.name
     var location by Checkpoints.location
     var score by Checkpoints.score
-    var user by User referencedOn Users.id
+    var user by User referencedOn Checkpoints.user
 
     override fun toString(): String {
-        return "{ \"name\": $name, \"location\": $location, \"score\": $score, \"user\": $user }"
+        return "{ \"name\": \"$name\", \"location\": \"$location\", \"score\": $score, \"user\": ${transaction { user } } }"
     }
 }
 
@@ -152,8 +152,8 @@ class User(id: EntityID<Int>) : IntEntity(id) {
 class VisitedCheckpoint(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<VisitedCheckpoint>(VisitedCheckpoints)
 
-    var student by Student referencedOn Students.id
-    var checkpoint by Checkpoint referencedOn Checkpoints.id
+    var student by Student referencedOn VisitedCheckpoints.student
+    var checkpoint by Checkpoint referencedOn VisitedCheckpoints.checkpoint
     var score by VisitedCheckpoints.score
 }
 
