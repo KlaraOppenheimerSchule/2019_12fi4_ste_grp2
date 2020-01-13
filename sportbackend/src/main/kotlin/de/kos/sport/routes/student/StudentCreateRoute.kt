@@ -17,7 +17,7 @@ class StudentCreateRoute : Route {
         val studentCount: Int? = req.splat()[2].toIntOrNull()
 
         if (DBConnector.validateToken(token)) {
-            val adminUser = transaction { DBConnector.getSessionFromToken(token)!!.user } //User is never null at this point
+            val adminUser = transaction { DBConnector.getSessionFromToken(token)!!.user }
 
             if (adminUser.type == DBConnector.ACCESS_LEVEL_GLOBAL) {
                 if (studentCount == null) {

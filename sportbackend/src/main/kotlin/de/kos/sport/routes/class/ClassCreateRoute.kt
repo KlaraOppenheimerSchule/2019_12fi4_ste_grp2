@@ -14,7 +14,7 @@ class ClassCreateRoute : Route {
         val className = req.splat()[1]
 
         if (DBConnector.validateToken(token)) {
-            val adminUser = transaction { DBConnector.getSessionFromToken(token)!!.user } //User is never null at this point
+            val adminUser = transaction { DBConnector.getSessionFromToken(token)!!.user }
 
             if (adminUser.type == DBConnector.ACCESS_LEVEL_GLOBAL) {
                 val generatedClass = DBConnector.createClass(className)

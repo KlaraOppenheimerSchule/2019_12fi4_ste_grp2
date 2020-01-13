@@ -11,30 +11,27 @@ class ClassAllRoute : Route {
         val sb = StringBuilder("[")
         val token = req.params(":token")
 
-        try {
-            if (DBConnector.validateToken(token)) {
-                val adminUser = transaction { DBConnector.getSessionFromToken(token)!!.user } //User is never null at this point
+        if (DBConnector.validateToken(token)) {
+            val adminUser =
+                transaction { DBConnector.getSessionFromToken(token)!!.user }
 
-                if (adminUser.type == DBConnector.ACCESS_LEVEL_GLOBAL) {
-                    val classes = transaction { de.kos.sport.database.Class.all() }
+            if (adminUser.type == DBConnector.ACCESS_LEVEL_GLOBAL) {
+                val classes = transaction { de.kos.sport.database.Class.all() }
 
-                    transaction {
-                        classes.forEachIndexed { id, clazz ->
-                            sb.append(clazz.toLightweightString())
+                transaction {
+                    classes.forEachIndexed { id, clazz ->
+                        sb.append(clazz.toLightweightString())
 
-                            if (id < classes.count() - 1) {
-                                sb.append(", ")
-                            }
+                        if (id < classes.count() - 1) {
+                            sb.append(", ")
                         }
                     }
-                } else {
-                    sb.append("{ \"error\": \"Insufficient permissions\" }")
                 }
             } else {
-                sb.append("{ \"error\": \"Invalid Token\" }")
+                sb.append("{ \"error\": \"Insufficient permissions\" }")
             }
-        } catch (ex: Exception) {
-            ex.printStackTrace()
+        } else {
+            sb.append("{ \"error\": \"Invalid Token\" }")
         }
 
         return sb.append("]").toString()
