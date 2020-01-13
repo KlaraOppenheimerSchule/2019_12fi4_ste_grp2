@@ -4,6 +4,7 @@ import de.kos.sport.database.DBConnector
 import de.kos.sport.routes.`class`.ClassAllRoute
 import de.kos.sport.routes.`class`.ClassCreateRoute
 import de.kos.sport.routes.`class`.ClassRoute
+import de.kos.sport.routes.checkpoint.CheckpointAllRoute
 import de.kos.sport.routes.checkpoint.CheckpointCreateRoute
 import de.kos.sport.routes.checkpoint.CheckpointRoute
 import de.kos.sport.routes.checkpoint.CheckpointVisitRoute
@@ -14,10 +15,7 @@ import de.kos.sport.routes.stats.`class`.StatsClassRoute
 import de.kos.sport.routes.stats.student.StatsStudentRoute
 import de.kos.sport.routes.stats.top.`class`.StatsTopClassRoute
 import de.kos.sport.routes.stats.top.student.StatsTopStudentRoute
-import de.kos.sport.routes.student.StudentClassRoute
-import de.kos.sport.routes.student.StudentCreateRoute
-import de.kos.sport.routes.student.StudentPresentRoute
-import de.kos.sport.routes.student.StudentRoute
+import de.kos.sport.routes.student.*
 import de.kos.sport.routes.user.CreateUserRoute
 import de.kos.sport.routes.user.UserRoute
 import mu.KotlinLogging
@@ -55,9 +53,10 @@ object SportsApp {
         //Register spark routes
         Spark.path("/api") {
             Spark.path("/checkpoint") {
+                Spark.get("/all/:token", CheckpointAllRoute())
                 Spark.get("/create/*/*/*/*/*", CheckpointCreateRoute())
                 Spark.get("/:id", CheckpointRoute())
-                Spark.get("/:id/visit/*", CheckpointVisitRoute())
+                Spark.get("/:id/visit/*/*", CheckpointVisitRoute())
             }
             Spark.path("/user") {
                 Spark.get("/:id", UserRoute())
@@ -78,6 +77,7 @@ object SportsApp {
                 Spark.get("/:id/present/*/*/*", StudentPresentRoute())
                 Spark.get("/create/*/*/*", StudentCreateRoute())
                 Spark.get("/:id/class", StudentClassRoute())
+                Spark.get("/:id/visits", StudentVisitsRoute())
             }
             Spark.path("/stats") {
                 Spark.get("/top/student/:count", StatsTopStudentRoute())

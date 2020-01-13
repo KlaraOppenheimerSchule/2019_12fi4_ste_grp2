@@ -35,7 +35,7 @@ class Checkpoint(id: EntityID<Int>) : IntEntity(id) {
     var user by User referencedOn Checkpoints.user
 
     override fun toString(): String {
-        return "{ \"name\": \"$name\", \"location\": \"$location\", \"score\": $score, \"user\": ${transaction { user } } }"
+        return "{ \"id\": $id, \"name\": \"$name\", \"location\": \"$location\", \"score\": $score, \"user\": ${transaction { user } } }"
     }
 }
 

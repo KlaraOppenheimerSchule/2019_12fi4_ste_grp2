@@ -67,14 +67,19 @@ object DBConnector {
     /**
      * Creates an entry in the table for visited checkpoints
      */
-    fun visitCheckpoint(student: Student, checkpoint: Checkpoint, score: Int) {
+    fun visitCheckpoint(student: Student, checkpoint: Checkpoint) {
         transaction {
             VisitedCheckpoint.new {
                 this.checkpoint = checkpoint
                 this.student = student
-                this.score = score
+                this.score = checkpoint.score
             }
         }
+    }
+
+    fun hashVisitedCheckpoint(student: Student, checkpoint: Checkpoint): Boolean {
+        TODO("Not implemented")
+        //return transaction { VisitedCheckpoints.select(VisitedCheckpoints.student eq student and VisitedCheckpoints.checkpoint eq checkpoint) }
     }
 
     /**
