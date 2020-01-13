@@ -8,20 +8,16 @@ import spark.Route
 class ClassRoute : Route {
     override fun handle(req: Request, response: Response): Any {
         val sb = StringBuilder("[")
-        try {
-            val id = req.params(":id").toIntOrNull()
+        val id = req.params(":id").toIntOrNull()
 
-            if (id != null) {
-                val clazz = DBConnector.getClassById(id)
+        if (id != null) {
+            val clazz = DBConnector.getClassById(id)
 
-                if (clazz != null) {
-                    sb.append(clazz)
-                }
-            } else {
-                sb.append("{ \"error\": \"Id needs to be an integer\" }")
+            if (clazz != null) {
+                sb.append(clazz)
             }
-        } catch (ex: Exception) {
-            ex.printStackTrace()
+        } else {
+            sb.append("{ \"error\": \"Id needs to be an integer\" }")
         }
 
         return sb.append("]").toString()

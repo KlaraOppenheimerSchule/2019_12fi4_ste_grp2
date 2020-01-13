@@ -1,6 +1,5 @@
 package de.kos.sport.routes.student
 
-import de.kos.sport.database.DBConnector
 import de.kos.sport.database.Student
 import org.jetbrains.exposed.sql.transactions.transaction
 import spark.Request
