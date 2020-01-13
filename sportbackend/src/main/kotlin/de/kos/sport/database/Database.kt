@@ -2,7 +2,6 @@ package de.kos.sport.database
 
 import org.jetbrains.exposed.dao.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.lang.StringBuilder
 import java.util.*
 
 /**
@@ -103,6 +102,12 @@ class Class(id: EntityID<Int>) : IntEntity(id) {
         }
 
         return "{ \"id\": ${this.id}, \"name\": \"$name\", \"score\": $score, \"students\": [$sb] }"
+    }
+
+    fun toLightweightString(): String {
+        val studentCount = transaction { students.count() }
+
+        return "{ \"id\": ${this.id}, \"name\": \"$name\", \"score\": $score, \"students\": $studentCount }"
     }
 }
 

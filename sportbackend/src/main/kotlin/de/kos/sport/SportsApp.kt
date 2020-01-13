@@ -1,22 +1,23 @@
 package de.kos.sport
 
 import de.kos.sport.database.DBConnector
+import de.kos.sport.routes.`class`.ClassAllRoute
 import de.kos.sport.routes.`class`.ClassCreateRoute
 import de.kos.sport.routes.`class`.ClassRoute
 import de.kos.sport.routes.checkpoint.CheckpointRoute
-import de.kos.sport.routes.session.SessionDestroyRoute
 import de.kos.sport.routes.session.SessionCreateRoute
+import de.kos.sport.routes.session.SessionDestroyRoute
+import de.kos.sport.routes.session.SessionValidateRoute
 import de.kos.sport.routes.stats.`class`.StatsClassRoute
 import de.kos.sport.routes.stats.student.StatsStudentRoute
 import de.kos.sport.routes.stats.top.`class`.StatsTopClassRoute
 import de.kos.sport.routes.stats.top.student.StatsTopStudentRoute
+import de.kos.sport.routes.student.StudentClassRoute
 import de.kos.sport.routes.student.StudentCreateRoute
 import de.kos.sport.routes.student.StudentPresentRoute
 import de.kos.sport.routes.student.StudentRoute
 import de.kos.sport.routes.user.CreateUserRoute
 import de.kos.sport.routes.user.UserRoute
-import de.kos.sport.routes.session.SessionValidateRoute
-import de.kos.sport.routes.student.StudentClassRoute
 import mu.KotlinLogging
 import spark.Spark
 
@@ -66,6 +67,7 @@ object SportsApp {
                 Spark.get("/:token/destroy", SessionDestroyRoute())
             }
             Spark.path("/class") {
+                Spark.get("/all/:token", ClassAllRoute())
                 Spark.get("/create/*/*", ClassCreateRoute())
                 Spark.get("/:id", ClassRoute())
             }

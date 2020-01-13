@@ -1,7 +1,7 @@
 package de.kos.sport.routes.user
 
-import de.kos.sport.SportsApp
 import de.kos.sport.database.DBConnector
+import org.jetbrains.exposed.sql.transactions.transaction
 import spark.Request
 import spark.Response
 import spark.Route
@@ -15,7 +15,7 @@ class CreateUserRoute : Route {
         val password = req.splat()[2]
 
         if (DBConnector.validateToken(token)) {
-            val adminUser = DBConnector.getSessionFromToken(token)!!.user //User is never null at this point
+            val adminUser = transaction { DBConnector.getSessionFromToken(token)!!.user } //User is never null at this point
 
             if (adminUser.type == DBConnector.ACCESS_LEVEL_GLOBAL) {
                 try {
