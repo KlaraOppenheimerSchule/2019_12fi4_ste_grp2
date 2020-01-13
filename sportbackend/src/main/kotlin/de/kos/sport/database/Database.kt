@@ -1,6 +1,8 @@
 package de.kos.sport.database
 
 import org.jetbrains.exposed.dao.*
+import org.jetbrains.exposed.sql.transactions.transaction
+import java.lang.StringBuilder
 import java.util.*
 
 /**
@@ -32,6 +34,10 @@ class Checkpoint(id: EntityID<Int>) : IntEntity(id) {
     var location by Checkpoints.location
     var score by Checkpoints.score
     var user by User referencedOn Users.id
+
+    override fun toString(): String {
+        return "{ \"name\": $name, \"location\": $location, \"score\": $score, \"user\": $user }"
+    }
 }
 
 /**
@@ -85,7 +91,18 @@ class Class(id: EntityID<Int>) : IntEntity(id) {
     var name by Classes.name
 
     override fun toString(): String {
-        return "{ \"id\": ${this.id}, \"name\": \"$name\", \"score\": $score }"
+        val sb = StringBuilder()
+        transaction {
+            students.forEachIndexed { id, it ->
+                sb.append(it)
+
+                if (id < students.count() - 1) {
+                    sb.append(", ")
+                }
+            }
+        }
+
+        return "{ \"id\": ${this.id}, \"name\": \"$name\", \"score\": $score, \"students\": [$sb] }"
     }
 }
 

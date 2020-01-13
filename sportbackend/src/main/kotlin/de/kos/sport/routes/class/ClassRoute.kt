@@ -1,24 +1,27 @@
 package de.kos.sport.routes.`class`
 
-import de.kos.sport.database.Student
-import org.jetbrains.exposed.sql.transactions.transaction
+import de.kos.sport.database.DBConnector
 import spark.Request
 import spark.Response
 import spark.Route
 
 class ClassRoute : Route {
     override fun handle(req: Request, response: Response): Any {
-        val id = req.params(":id").toIntOrNull()
         val sb = StringBuilder("[")
+        try {
+            val id = req.params(":id").toIntOrNull()
 
-        val student = transaction { Student.all().find { it.studentId == id } }
+            if (id != null) {
+                val clazz = DBConnector.getClassById(id)
 
-        if (student != null) {
-            transaction {
-                sb.append(student.clazz)
+                if (clazz != null) {
+                    sb.append(clazz)
+                }
+            } else {
+                sb.append("{ \"error\": \"Id needs to be an integer\" }")
             }
-        } else {
-            sb.append("{ \"error\": \"Student not found\" }")
+        } catch (ex: Exception) {
+            ex.printStackTrace()
         }
 
         return sb.append("]").toString()

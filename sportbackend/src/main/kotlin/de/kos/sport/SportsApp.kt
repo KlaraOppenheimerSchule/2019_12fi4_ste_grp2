@@ -16,6 +16,7 @@ import de.kos.sport.routes.student.StudentRoute
 import de.kos.sport.routes.user.CreateUserRoute
 import de.kos.sport.routes.user.UserRoute
 import de.kos.sport.routes.session.SessionValidateRoute
+import de.kos.sport.routes.student.StudentClassRoute
 import mu.KotlinLogging
 import spark.Spark
 
@@ -72,6 +73,7 @@ object SportsApp {
                 Spark.get("/:id", StudentRoute())
                 Spark.get("/:id/present/*/*/*", StudentPresentRoute())
                 Spark.get("/create/*/*/*", StudentCreateRoute())
+                Spark.get("/:id/class", StudentClassRoute())
             }
             Spark.path("/stats") {
                 Spark.get("/top/student/:count", StatsTopStudentRoute())

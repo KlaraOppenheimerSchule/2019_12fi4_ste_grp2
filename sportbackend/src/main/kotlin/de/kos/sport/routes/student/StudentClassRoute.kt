@@ -7,19 +7,19 @@ import spark.Request
 import spark.Response
 import spark.Route
 
-class StudentRoute : Route {
+class StudentClassRoute : Route {
     override fun handle(req: Request, response: Response): Any {
         val sb = StringBuilder("[")
         val id = req.params(":id").toIntOrNull()
 
-        if (id == null) {
-            sb.append("{ \"error\": \"Id needs to be an integer\" }")
-        } else {
-            val student = DBConnector.getStudentByStudentId(id)
+        val student = transaction { Student.all().find { it.studentId == id } }
 
-            if (student != null) {
-                sb.append(student)
+        if (student != null) {
+            transaction {
+                sb.append(student.clazz)
             }
+        } else {
+            sb.append("{ \"error\": \"Student not found\" }")
         }
 
         return sb.append("]").toString()
