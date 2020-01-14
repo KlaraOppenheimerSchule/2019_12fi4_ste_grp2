@@ -77,11 +77,6 @@ object DBConnector {
         }
     }
 
-    fun hashVisitedCheckpoint(student: Student, checkpoint: Checkpoint): Boolean {
-        TODO("Not implemented")
-        //return transaction { VisitedCheckpoints.select(VisitedCheckpoints.student eq student and VisitedCheckpoints.checkpoint eq checkpoint) }
-    }
-
     /**
      * Creates and inserts a checkpoint
      * @return the created checkpoint entity
