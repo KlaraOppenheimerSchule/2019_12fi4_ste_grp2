@@ -60,7 +60,8 @@ export default {
       }
     },
     login: async function() {
-      let apiurl = process.env.VUE_APP_API_URL + "login/" + this.user + "/";
+      let apiurl =
+        process.env.VUE_APP_API_URL + "session/create/" + this.user + "/";
 
       let shapass = await this.sha256(this.pass);
 

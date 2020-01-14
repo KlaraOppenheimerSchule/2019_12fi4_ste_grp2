@@ -2,6 +2,8 @@ import Vue from "vue";
 import { IonicVueRouter } from "@ionic/vue";
 import Home from "./views/Home.vue";
 import Admin from "./views/Admin.vue";
+import AddClass from "./views/AddClass.vue";
+import Print from "./views/Print.vue";
 import Login from "./views/Login.vue";
 import StatsId from "./views/StatsId.vue";
 
@@ -30,6 +32,17 @@ export default new IonicVueRouter({
       path: "/admin",
       name: "admin",
       component: Admin
+    },
+    {
+      path: "/admin/class",
+      name: "addclass",
+      component: AddClass
+    },
+    {
+      path: "/admin/print/:id",
+      name: "print",
+      component: Print,
+      props: true
     },
     {
       path: "/about",

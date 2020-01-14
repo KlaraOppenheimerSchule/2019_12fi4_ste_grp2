@@ -26,4 +26,16 @@ ion-grid {
   margin-left: auto;
   margin-right: auto;
 }
+
+@media print {
+  .printhide {
+    display: none !important;
+  }
+  .ion-page {
+    position: static !important;
+    display: block !important;
+    overflow: visible !important;
+    contain: none !important;
+  }
+}
 </style>

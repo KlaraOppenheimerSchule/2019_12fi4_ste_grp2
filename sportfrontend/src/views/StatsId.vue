@@ -57,7 +57,7 @@ export default {
   mounted: function() {
     let vm = this;
     if (vm.id != 0) {
-      let apiurl = process.env.VUE_APP_API_URL + "class/" + vm.id;
+      let apiurl = process.env.VUE_APP_API_URL + "student/" + vm.id + "/class";
 
       axios.get(apiurl).then(response => {
         let resdata = response.data;
