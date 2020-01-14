@@ -35,7 +35,7 @@ class Checkpoint(id: EntityID<Int>) : IntEntity(id) {
     var user by User referencedOn Checkpoints.user
 
     override fun toString(): String {
-        return "{ \"id\": $id, \"name\": \"$name\", \"location\": \"$location\", \"score\": $score, \"user\": ${transaction { user } } }"
+        return transaction { "{ \"id\": $id, \"name\": \"$name\", \"location\": \"$location\", \"score\": $score, \"user\": ${user.id} }" }
     }
 }
 
@@ -155,6 +155,10 @@ class VisitedCheckpoint(id: EntityID<Int>) : IntEntity(id) {
     var student by Student referencedOn VisitedCheckpoints.student
     var checkpoint by Checkpoint referencedOn VisitedCheckpoints.checkpoint
     var score by VisitedCheckpoints.score
+
+    override fun toString(): String {
+        return transaction { "{ \"checkpoint\": ${checkpoint.id}, \"student\": ${student.id}, \"score\": $score" }
+    }
 }
 
 /**
