@@ -28,6 +28,17 @@ object SportsApp {
 
     private const val SPARK_PORT = 8181
 
+    val mountain = arrayOf(
+        "There is no way into the mountain",
+        "There is no way into the mountain",
+        "There is no way",
+        "There is no fucking way into the mountain",
+        "NO",
+        "There is no way into the mountain",
+        "AHHHHHHHHHH"
+    )
+    var mountainIndex = 0
+
     /**
      * Starts the spark web server and configures it to provide the api endpoints
      */
@@ -46,6 +57,19 @@ object SportsApp {
         logger.info { "Spark is listening to port $SPARK_PORT" }
 
         logger.debug { "Registering routes" }
+
+        Spark.notFound { req, res ->
+            try {
+                val mnt = mountain[mountainIndex]
+                mountainIndex++
+                mountainIndex %= mountain.size
+
+                    "<h1 style=\"display: inline-block; margin-right: 10px;\">404</h1> <h2 style=\"display: inline-block;\">$mnt</h2><br><iframe src=\"https://giphy.com/embed/14dfyATDmRCO6A\" width=\"480\" height=\"321\" frameBorder=\"0\" class=\"giphy-embed\" allowFullScreen></iframe><p><a href=\"https://giphy.com/gifs/balin-14dfyATDmRCO6A\"></a></p>"
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+            }
+        }
+        Spark.internalServerError { req, res -> "<h1 style=\"display: inline-block; margin-right: 10px;\">500</h1> <h2 style=\"display: inline-block;\">Cheese Knife</h2>" }
 
         //Register spark routes
         Spark.path("/api") {
