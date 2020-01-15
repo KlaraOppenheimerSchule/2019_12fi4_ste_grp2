@@ -1,14 +1,12 @@
 <template>
-  <ion-header>
+  <ion-header class="printhide">
     <ion-toolbar color="primary">
       <ion-buttons slot="start">
         <ion-back-button></ion-back-button>
       </ion-buttons>
       <ion-title>Klaraktiv</ion-title>
       <ion-buttons slot="end">
-        <ion-button v-on:click="loginOut()">
-          {{ title }}
-        </ion-button>
+        <ion-button v-on:click="loginOut()">{{ title }}</ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
