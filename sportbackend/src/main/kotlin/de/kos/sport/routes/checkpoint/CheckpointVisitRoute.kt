@@ -19,23 +19,28 @@ class CheckpointVisitRoute : Route {
                 transaction { DBConnector.getSessionFromToken(token)!!.user }
 
             if (adminUser.type == DBConnector.ACCESS_LEVEL_GLOBAL) {
-                if (id == null) {
-                    sb.append("{ \"error\": \"Id needs to be an integer\" }")
-                } else if (studentId == null) {
-                    sb.append("{ \"error\": \"Student id needs to be an integer\" }")
-                } else {
-                    val checkpoint = DBConnector.getCheckpointById(id)
-                    val student = DBConnector.getStudentByStudentId(studentId)
+                when {
+                    id == null -> {
+                        sb.append("{ \"error\": \"Id needs to be an integer\" }")
+                    }
+                    studentId == null -> {
+                        sb.append("{ \"error\": \"Student id needs to be an integer\" }")
+                    }
+                    else -> {
+                        val checkpoint = DBConnector.getCheckpointById(id)
+                        val student = DBConnector.getStudentByStudentId(studentId)
 
-                    when {
-                        checkpoint == null -> {
-                            sb.append("{ \"error\": \"Invalid checkpoint\" }")
-                        }
-                        student == null -> {
-                            sb.append("{ \"error\": \"Invalid user\" }")
-                        }
-                        else -> {
-                            DBConnector.visitCheckpoint(student, checkpoint)
+                        when {
+                            checkpoint == null -> {
+                                sb.append("{ \"error\": \"Invalid checkpoint\" }")
+                            }
+                            student == null -> {
+                                sb.append("{ \"error\": \"Invalid user\" }")
+                            }
+                            else -> {
+                                student.present = true
+                                DBConnector.visitCheckpoint(student, checkpoint)
+                            }
                         }
                     }
                 }
