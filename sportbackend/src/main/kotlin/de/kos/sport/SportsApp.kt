@@ -66,12 +66,17 @@ object SportsApp {
                 mountainIndex++
                 mountainIndex %= mountain.size
 
-                    "<h1 style=\"display: inline-block; margin-right: 10px;\">404</h1> <h2 style=\"display: inline-block;\">$mnt</h2><br><iframe src=\"https://giphy.com/embed/14dfyATDmRCO6A\" width=\"480\" height=\"321\" frameBorder=\"0\" class=\"giphy-embed\" allowFullScreen></iframe><p><a href=\"https://giphy.com/gifs/balin-14dfyATDmRCO6A\"></a></p>"
+                "<h1 style=\"display: inline-block; margin-right: 10px;\">404</h1>" +
+                        " <h2 style=\"display: inline-block;\">$mnt</h2><br>" +
+                        "<iframe src=\"https://giphy.com/embed/14dfyATDmRCO6A\" width=\"480\" height=\"321\"" +
+                        " frameBorder=\"0\" class=\"giphy-embed\" allowFullScreen></iframe><p>" +
+                        "<a href=\"https://giphy.com/gifs/balin-14dfyATDmRCO6A\"></a></p>"
             } catch (ex: Exception) {
                 ex.printStackTrace()
             }
         }
-        Spark.internalServerError { req, res -> "<h1 style=\"display: inline-block; margin-right: 10px;\">500</h1> <h2 style=\"display: inline-block;\">Cheese Knife</h2>" }
+        Spark.internalServerError { req, res -> "<h1 style=\"display: inline-block; margin-right: 10px;\">500</h1>" +
+                " <h2 style=\"display: inline-block;\">Cheese Knife</h2>" }
 
         //Register spark routes
         Spark.path("/api") {
