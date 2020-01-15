@@ -96,7 +96,7 @@ object SportsApp {
             }
             Spark.path("/student") {
                 Spark.get("/:id", StudentRoute())
-                Spark.get("/:id/present/*/*/*", StudentPresentRoute())
+                Spark.get("/:id/present/*/*", StudentPresentRoute())
                 Spark.get("/create/*/*/*", StudentCreateRoute())
                 Spark.get("/:id/class", StudentClassRoute())
                 Spark.get("/:id/visits", StudentVisitsRoute())
