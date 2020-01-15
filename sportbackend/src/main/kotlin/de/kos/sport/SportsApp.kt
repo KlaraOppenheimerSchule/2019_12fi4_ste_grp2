@@ -13,8 +13,10 @@ import de.kos.sport.routes.stats.student.StatsStudentRoute
 import de.kos.sport.routes.stats.top.`class`.StatsTopClassRoute
 import de.kos.sport.routes.stats.top.student.StatsTopStudentRoute
 import de.kos.sport.routes.student.*
-import de.kos.sport.routes.user.CreateUserRoute
+import de.kos.sport.routes.user.UserCreateRoute
+import de.kos.sport.routes.user.UserDeleteRoute
 import de.kos.sport.routes.user.UserRoute
+import de.kos.sport.routes.user.UserUpdateRoute
 import mu.KotlinLogging
 import spark.Spark
 
@@ -76,13 +78,17 @@ object SportsApp {
             Spark.path("/checkpoint") {
                 Spark.get("/all/:token", CheckpointAllRoute())
                 Spark.get("/create/*/*/*/*/*", CheckpointCreateRoute())
+                Spark.get("/:id/update/*/*/*/*/*", CheckpointUpdateRoute())
+                Spark.get("/:id/delete/*/*", CheckpointDeleteRoute())
                 Spark.get("/:id", CheckpointRoute())
                 Spark.get("/:id/visit/*/*", CheckpointVisitRoute())
                 Spark.get("/:id/visits/*", CheckpointVisitsRoute())
             }
             Spark.path("/user") {
                 Spark.get("/:id", UserRoute())
-                Spark.get("/create/*/*/*", CreateUserRoute())
+                Spark.get("/create/*/*/*", UserCreateRoute())
+                Spark.get("/:id/delete/*", UserDeleteRoute())
+                Spark.get("/:id/update/*/*", UserUpdateRoute())
             }
             Spark.path("/session") {
                 Spark.get("/create/*/*", SessionCreateRoute())

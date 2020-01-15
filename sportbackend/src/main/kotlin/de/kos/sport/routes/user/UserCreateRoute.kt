@@ -7,7 +7,7 @@ import spark.Response
 import spark.Route
 import java.sql.SQLException
 
-class CreateUserRoute : Route {
+class UserCreateRoute : Route {
     override fun handle(req: Request, response: Response): Any {
         val sb = StringBuilder("[")
         val token = req.splat()[0]
