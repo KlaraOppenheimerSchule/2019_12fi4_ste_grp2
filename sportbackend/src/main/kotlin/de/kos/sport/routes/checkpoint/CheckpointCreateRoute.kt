@@ -5,6 +5,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import spark.Request
 import spark.Response
 import spark.Route
+import java.sql.SQLException
 
 class CheckpointCreateRoute : Route {
     override fun handle(req: Request, response: Response): Any {
@@ -32,8 +33,13 @@ class CheckpointCreateRoute : Route {
                     if (user == null) {
                         sb.append("{ \"error\": \"User not found\" }")
                     } else {
-                        val checkpoint = DBConnector.createCheckpoint(name, location, score, user)
-                        sb.append(checkpoint)
+                        try {
+                            sb.append(DBConnector.createCheckpoint(name, location, score, user))
+                        } catch (ex: SQLException) {
+                            //The best way at the moment to detect if a user already exists when the query fails
+                            //without forcing an additional sql statement
+                            sb.append("{ \"error\": \"Checkpoint already exists\" }")
+                        }
                     }
                 }
             } else {
