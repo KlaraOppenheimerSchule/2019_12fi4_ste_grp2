@@ -1,7 +1,5 @@
 package de.kos.sport.routes.student
 
-import de.kos.sport.database.Class
-import de.kos.sport.database.Classes
 import de.kos.sport.database.DBConnector
 import org.jetbrains.exposed.sql.transactions.transaction
 import spark.Request
@@ -25,7 +23,7 @@ class StudentCreateRoute : Route {
                 } else if (classId == null) {
                     sb.append("{ \"error\": \"Id needs to be an integer\" }")
                 } else {
-                    val clazz = transaction { Class.find { Classes.id eq classId }.firstOrNull() }
+                    val clazz = DBConnector.getClassById(classId)
 
                     if (clazz != null) {
                         sb.append("{ \"students\": [")

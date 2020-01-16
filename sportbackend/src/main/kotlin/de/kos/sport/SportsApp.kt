@@ -23,7 +23,6 @@ import spark.Spark
 object SportsApp {
 
     //TODO Use json library to build json responses
-    //TODO Instead of using "Table.all()" create proper select statements
     //TODO Change json response format to "[ { success: true/false, message: "bla bla", data [ { user: 0 } ] } ]
 
     val logger = KotlinLogging.logger("SportsApp")

@@ -1,7 +1,6 @@
 package de.kos.sport.routes.checkpoint
 
 import de.kos.sport.database.DBConnector
-import de.kos.sport.database.VisitedCheckpoint
 import org.jetbrains.exposed.sql.transactions.transaction
 import spark.Request
 import spark.Response
@@ -21,13 +20,20 @@ class CheckpointVisitsRoute : Route {
                 if (id == null) {
                     sb.append("{ \"error\": \"Id needs to be an integer\" }")
                 } else {
-                    transaction {
-                        val visits = VisitedCheckpoint.all().filter { it.checkpoint.id.value == id }
-                        visits.forEachIndexed { id, visit ->
-                            sb.append(visit)
+                    val checkpoint = DBConnector.getCheckpointById(id)
 
-                            if (id < visits.count() - 1) {
-                                sb.append(", ")
+                    if (checkpoint == null) {
+                        sb.append("{ \"error\": \"Checkpoint not found\" }")
+                    } else {
+                        transaction {
+                            val visits = DBConnector.getVisitors(checkpoint)
+
+                            visits.forEachIndexed { id, visit ->
+                                sb.append(visit)
+
+                                if (id < visits.count() - 1) {
+                                    sb.append(", ")
+                                }
                             }
                         }
                     }
