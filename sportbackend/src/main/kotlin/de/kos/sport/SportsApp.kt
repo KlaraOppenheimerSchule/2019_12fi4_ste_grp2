@@ -83,7 +83,7 @@ object SportsApp {
                 Spark.get("/all/:token", CheckpointAllRoute())
                 Spark.get("/create/*/*/*/*/*", CheckpointCreateRoute())
                 Spark.get("/:id/update/*/*/*/*/*", CheckpointUpdateRoute())
-                Spark.get("/:id/delete/*/*", CheckpointDeleteRoute())
+                Spark.get("/:id/delete/*", CheckpointDeleteRoute())
                 Spark.get("/:id", CheckpointRoute())
                 Spark.get("/:id/visit/*/*", CheckpointVisitRoute())
                 Spark.get("/:id/visits/*", CheckpointVisitsRoute())
