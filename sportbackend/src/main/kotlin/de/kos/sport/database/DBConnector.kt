@@ -170,56 +170,74 @@ object DBConnector {
      * @return the user handle by id
      */
     fun getUserById(id: Int): User? {
-        return transaction { User.all().find { it.id.value == id } }
+        return transaction { User.find { Users.id eq id }.firstOrNull() }
     }
 
     /**
      * @return the user handle by name
      */
     fun getUserByName(name: String): User? {
-        return transaction { User.all().find { it.name == name } }
+        return transaction { User.find { Users.name eq name }.firstOrNull() }
     }
 
     /**
      * @return the student handle by index id
      */
     fun getStudentById(id: Int): Student? {
-        return transaction { Student.all().find { it.id.value == id } }
+        return transaction { Student.find { Students.id eq id }.firstOrNull() }
     }
 
     /**
      * @return the student handle by student id
      */
     fun getStudentByStudentId(studentId: Int): Student? {
-        return transaction { Student.all().find { it.studentId == studentId } }
+        return transaction { Student.find { Students.studentId eq studentId }.firstOrNull() }
     }
 
     /**
      * @return the checkpoint handle by id
      */
     fun getCheckpointById(id: Int): Checkpoint? {
-        return transaction { Checkpoint.all().find { it.id.value == id } }
+        return transaction { Checkpoint.find { Checkpoints.id eq id }.firstOrNull() }
     }
 
     /**
      * @return the checkpoint handle by name
      */
     fun getCheckpointByName(name: String): Checkpoint? {
-        return transaction { Checkpoint.all().find { it.name == name } }
+        return transaction { Checkpoint.find { Checkpoints.name eq name }.firstOrNull() }
     }
 
     /**
      * @return the class handle by id
      */
     fun getClassById(id: Int): Class? {
-        return transaction { Class.all().find { it.id.value == id } }
+        return transaction { Class.find { Classes.id eq id }.firstOrNull() }
     }
 
     /**
      * @return the class handle by name
      */
     fun getClassByName(name: String): Class? {
-        return transaction { Class.all().find { it.name == name } }
+        return transaction { Class.find { Classes.name eq name }.firstOrNull() }
+    }
+
+    /**
+     * @return the visited checkpoint handle
+     */
+    fun getVisitedCheckpoints(student: Student): Array<VisitedCheckpoint> {
+        return transaction {
+            VisitedCheckpoint.find { VisitedCheckpoints.student eq student.id.value }.toList().toTypedArray()
+        }
+    }
+
+    /**
+     * @return the visited checkpoint handle
+     */
+    fun getVisitors(checkpoint: Checkpoint): Array<VisitedCheckpoint> {
+        return transaction {
+            VisitedCheckpoint.find { VisitedCheckpoints.checkpoint eq checkpoint.id.value }.toList().toTypedArray()
+        }
     }
 
     /**
