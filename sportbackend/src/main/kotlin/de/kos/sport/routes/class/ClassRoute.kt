@@ -15,6 +15,8 @@ class ClassRoute : Route {
 
             if (clazz != null) {
                 sb.append(clazz)
+            } else {
+                sb.append("{ \"error\": \"Class not found\" }")
             }
         } else {
             sb.append("{ \"error\": \"Id needs to be an integer\" }")
