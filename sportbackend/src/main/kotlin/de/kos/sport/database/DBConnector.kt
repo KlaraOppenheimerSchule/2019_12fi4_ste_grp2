@@ -223,7 +223,7 @@ object DBConnector {
     }
 
     /**
-     * @return the visited checkpoint handle
+     * @return the visited checkpoint handles
      */
     fun getVisitedCheckpoints(student: Student): Array<VisitedCheckpoint> {
         return transaction {
@@ -237,6 +237,15 @@ object DBConnector {
     fun getVisitors(checkpoint: Checkpoint): Array<VisitedCheckpoint> {
         return transaction {
             VisitedCheckpoint.find { VisitedCheckpoints.checkpoint eq checkpoint.id.value }.toList().toTypedArray()
+        }
+    }
+
+    /**
+     * @return the checkpoint handles
+     */
+    fun getCheckpointsByUser(user: User): Array<Checkpoint> {
+        return transaction {
+            Checkpoint.find { Checkpoints.user eq user.id.value }.toList().toTypedArray()
         }
     }
 
