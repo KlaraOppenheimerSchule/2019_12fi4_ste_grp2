@@ -31,6 +31,7 @@ class UserUpdateRoute : Route {
                 } else {
                     transaction {
                         user.password = password
+                        user.name = username
                     }
                 }
             } else {
