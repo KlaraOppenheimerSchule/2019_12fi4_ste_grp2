@@ -3,6 +3,7 @@ package de.kos.sport
 import de.kos.sport.database.DBConnector
 import de.kos.sport.routes.`class`.ClassAllRoute
 import de.kos.sport.routes.`class`.ClassCreateRoute
+import de.kos.sport.routes.`class`.ClassDeleteRoute
 import de.kos.sport.routes.`class`.ClassRoute
 import de.kos.sport.routes.checkpoint.*
 import de.kos.sport.routes.session.SessionCreateRoute
@@ -92,7 +93,7 @@ object SportsApp {
                 Spark.get("/:id", UserRoute())
                 Spark.get("/create/*/*/*", UserCreateRoute())
                 Spark.get("/:id/delete/*", UserDeleteRoute())
-                Spark.get("/:id/update/*/*", UserUpdateRoute())
+                Spark.get("/:id/update/*/*/*", UserUpdateRoute())
             }
             Spark.path("/session") {
                 Spark.get("/create/*/*", SessionCreateRoute())
@@ -102,6 +103,7 @@ object SportsApp {
             Spark.path("/class") {
                 Spark.get("/all/:token", ClassAllRoute())
                 Spark.get("/create/*/*", ClassCreateRoute())
+                Spark.get("/:id/delete/*", ClassDeleteRoute())
                 Spark.get("/:id", ClassRoute())
             }
             Spark.path("/student") {
