@@ -1,12 +1,13 @@
 <template>
   <div class="chart">
-    <div class="text-h5">{{msg}}</div>
+    <h2>{{ msg }}</h2>
     <canvas :id="propid" width="300" height="300"></canvas>
   </div>
 </template>
 
 <script>
 import Chart from "chart.js";
+import axios from "axios";
 export default {
   props: ["propid", "msg", "endpoint"],
   data() {
@@ -22,19 +23,25 @@ export default {
       chart.data.datasets.forEach(dataset => {
         dataset.data = vals;
       });
+      //TODO: Update Chart based on API Data
       chart.update();
     },
     getApiData: function() {
       let res = "";
 
       if (this.endpoint != "") {
-        let apiurl = this.$api + this.endpoint;
-        this.$axios.get(apiurl).then(response => {
+        let apiurl = process.env.VUE_APP_API_URL + this.endpoint;
+
+        console.log(apiurl);
+
+        axios.get(apiurl).then(response => {
           let resdata = response.data;
 
+          console.log(resdata);
           let labels = [];
           let vals = [];
           for (let i = 0; i < resdata.length; i++) {
+            console.log(resdata[i]);
             if (resdata[i].name != undefined) {
               labels.push(resdata[i].name);
             } else {
@@ -42,12 +49,15 @@ export default {
             }
             vals.push(resdata[i].score);
           }
+          console.log(labels);
+          console.log(vals);
           this.updateChart(labels, vals);
         });
       }
       return res;
     }
   },
+  //TODO: Connect to API process.env.VUE_APP_API_URL + this.endpoint
   mounted() {
     let res = new Chart(this.propid, {
       type: "bar",

@@ -25,7 +25,10 @@
                   Schüler hinzufügen
                 </button>
               </span>
-              <router-link :to="{ name: 'print' }" target="_blank"
+              <router-link
+                :to="{ name: 'print', params: { id: item.id } }"
+                target="_blank"
+                class="classlistprint"
                 >Klasse drucken</router-link
               >
               <!--TODO: Implement this -->
@@ -52,7 +55,7 @@ export default {
     let type = this.$cookie.get("type");
 
     if (token == undefined || type == undefined) {
-      this.$router.push({ path: "login" });
+      this.$router.push({ name: "login" });
     }
 
     let apiurl = process.env.VUE_APP_API_URL + "session/" + token + "/validate";
@@ -60,7 +63,7 @@ export default {
     axios.get(apiurl).then(response => {
       let resdata = response.data;
       if (resdata[0].valid != true) {
-        this.$router.push({ path: "login" });
+        this.$router.push({ name: "login" });
       }
     });
 
@@ -108,7 +111,9 @@ export default {
     "label . . count"
     "add add print print" / 1fr 1fr 1fr 1fr;
   gap: 20px;
-  margin-bottom: 40px;
+  padding-bottom: 20px;
+  padding-top: 20px;
+  border-bottom: 1px solid black;
 }
 
 .classlistlabel {
@@ -116,11 +121,13 @@ export default {
 }
 .classlistcount {
   grid-area: count;
+  text-align: right;
 }
 .classlistaddStudent {
   grid-area: add;
 }
 .classlistprint {
   grid-area: print;
+  text-align: right;
 }
 </style>

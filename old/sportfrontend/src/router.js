@@ -2,7 +2,10 @@ import Vue from "vue";
 import { IonicVueRouter } from "@ionic/vue";
 import Home from "./views/Home.vue";
 import Admin from "./views/Admin.vue";
+import Checkpoint from "./views/Checkpoint.vue";
 import AddClass from "./views/AddClass.vue";
+import EditCheckpoints from "./views/EditCheckpoints.vue";
+import Ill from "./views/Ill.vue";
 import Print from "./views/Print.vue";
 import Login from "./views/Login.vue";
 import StatsId from "./views/StatsId.vue";
@@ -23,11 +26,11 @@ export default new IonicVueRouter({
       name: "login",
       component: Login
     },
-    /*{
-      path: "/station",
-      name: "station",
-      component: Station
-    },*/
+    {
+      path: "/checkpoint",
+      name: "checkpoint",
+      component: Checkpoint
+    },
     {
       path: "/admin",
       name: "admin",
@@ -37,6 +40,16 @@ export default new IonicVueRouter({
       path: "/admin/class",
       name: "addclass",
       component: AddClass
+    },
+    {
+      path: "/admin/ill",
+      name: "ill",
+      component: Ill
+    },
+    {
+      path: "/admin/checkpoints",
+      name: "editcheckpoints",
+      component: EditCheckpoints
     },
     {
       path: "/admin/print/:id",

@@ -4,7 +4,7 @@
       <div class="flexheader">
         <div class="klasse">{{ classDetails.name }}</div>
         <div class="logo">
-          <img src="@/assets/logo-klara.png" />
+          <img src="~assets/logo-klara.png" />
         </div>
         <div class="nummer">{{ student.id }}</div>
       </div>
@@ -31,7 +31,6 @@
 </template>
 
 <script>
-import axios from "axios";
 export default {
   name: "print",
   data: function() {
@@ -43,46 +42,49 @@ export default {
   },
   mounted: function() {
     //TODO: Move this to a seperate script
-    let token = this.$cookie.get("token");
-    let type = this.$cookie.get("type");
+    let token = this.$q.cookies.get("token");
+    let type = this.$q.cookies.get("type");
 
     if (token == undefined || type == undefined) {
-      this.$router.push({ path: "login" });
+      this.$router.push({ path: "/login" });
     }
 
-    let apiurl = process.env.VUE_APP_API_URL + "session/" + token + "/validate";
+    let apiurl = this.$api + "session/" + token + "/validate";
 
-    axios.get(apiurl).then(response => {
+    this.$axios.get(apiurl).then(response => {
       let resdata = response.data;
       if (resdata[0].valid != true) {
-        this.$router.push({ path: "login" });
+        this.$router.push({ path: "/login" });
       }
     });
 
     this.getStudents();
-    this.getCheckpoints();
   },
   methods: {
     getStudents: function() {
       let classid = this.$route.params.id;
-      let apiurl = process.env.VUE_APP_API_URL + "class/" + classid;
+      let apiurl = this.$api + "class/" + classid;
 
-      axios.get(apiurl).then(response => {
+      this.$axios.get(apiurl).then(response => {
         let resdata = response.data;
         //TODO: Use Destructuring, because I don't have time
         this.classDetails.id = resdata[0].id;
         this.classDetails.name = resdata[0].name;
         this.classDetails.score = resdata[0].score;
         this.students = resdata[0].students;
+        this.getCheckpoints();
       });
     },
     getCheckpoints: function() {
-      let token = this.$cookie.get("token");
-      let apiurl = process.env.VUE_APP_API_URL + "checkpoint/all/" + token;
+      let token = this.$q.cookies.get("token");
+      let apiurl = this.$api + "checkpoint/all/" + token;
 
-      axios.get(apiurl).then(response => {
+      this.$axios.get(apiurl).then(response => {
         let resdata = response.data;
         this.checkpoints = resdata;
+        setTimeout(function() {
+          window.print();
+        }, 1000);
       });
     }
   }

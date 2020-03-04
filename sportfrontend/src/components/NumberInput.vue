@@ -1,24 +1,16 @@
 <template>
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <ion-item>
-          <ion-label position="floating">Schülernummer</ion-label>
-          <ion-input
-            class="numberInput"
-            type="tel"
-            :value="val"
-            @input="inputevent($event.target)"
-            maxlength="6"
-          ></ion-input>
-        </ion-item>
-        <ion-text v-if="error" color="danger"
-          >Schülernummer nicht gültig</ion-text
-        >
-        <ion-button size="full" v-on:click="routeToId()">Button</ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <div class="column">
+    <q-input
+      outlined
+      label="Schülernummer"
+      class="numberInput"
+      type="tel"
+      v-model="val"
+      maxlength="6"
+    ></q-input>
+    <div class="text-body2 full-width" v-if="error" color="danger">Schülernummer nicht gültig</div>
+    <q-btn class="full-width bg-primary text-white q-mt-md" @click="routeToId()">Button</q-btn>
+  </div>
 </template>
 
 <script>
@@ -31,9 +23,6 @@ export default {
     };
   },
   methods: {
-    inputevent: function(target) {
-      this.val = target.value;
-    },
     validateInput: function() {
       let validateVar = false;
       if (this.val.toString().length == 6) {
@@ -51,11 +40,3 @@ export default {
   }
 };
 </script>
-
-<style scoped lang="scss">
-/*ion-grid{
-    max-width: 600px !important;
-    margin-right: auto;
-    margin-left: auto;
-  }*/
-</style>
