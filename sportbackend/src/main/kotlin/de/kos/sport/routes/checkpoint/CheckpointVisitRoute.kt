@@ -40,6 +40,7 @@ class CheckpointVisitRoute : Route {
                             else -> {
                                 student.present = true
                                 DBConnector.visitCheckpoint(student, checkpoint)
+                                sb.append("{ \"success\": true }")
                             }
                         }
                     }
