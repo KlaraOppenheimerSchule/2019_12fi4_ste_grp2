@@ -15,7 +15,7 @@ const routes = [
     children: [{ path: "", component: () => import("pages/Login.vue") }]
   },
   {
-    path: "/checkpoint",
+    path: "/checkpoint/:id",
     component: () => import("layouts/MyLayout.vue"),
     children: [{ path: "", component: () => import("pages/Checkpoint.vue") }]
   },

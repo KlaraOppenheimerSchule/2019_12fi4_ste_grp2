@@ -33,22 +33,49 @@ export default {
         if (resdata[0].token != undefined) {
           this.$q.cookies.set("token", resdata[0].token, { expires: "1D" });
           this.$q.cookies.set("type", resdata[0].type, { expires: "1D" });
+          console.log(resdata[0]);
           this.$store.commit("logIn");
-          this.redirectCookie();
+          this.redirectCookie(resdata[0]);
         } else {
           this.error = resdata[0].error;
         }
       });
     },
-    redirectCookie: function() {
-      let cookieType = this.$q.cookies.get("type");
+
+    getUserID: async function(token) {
+      let apiurl = this.$api + "session/" + token + "/validate";
+
+      let id = await this.$axios.get(apiurl).then(response => {
+        let resdata = response.data;
+        console.log(resdata);
+        return resdata[0].user;
+      });
+
+      return id;
+    },
+
+    redirectCheckpoint: async function(token) {
+      let id = await this.getUserID(token);
+      console.log(id);
+      let apiurl = this.$api + "user/" + id + "/checkpoints/" + token;
+
+      this.$axios.get(apiurl).then(response => {
+        let resdata = response.data;
+        
+        let id = resdata[0].checkpoints[0].id;
+        this.$router.push({ path: "/checkpoint/" + id });
+
+      });
+    },
+    redirectCookie: function(response) {
+      let cookieType = response.type;
       switch (cookieType) {
         case "2":
           this.$router.push({ path: "/admin" });
           break;
 
         case "1":
-          this.$router.push({ path: "/checkpoint" });
+          this.redirectCheckpoint(response.token);
           break;
 
         default:
