@@ -38,7 +38,9 @@ class CheckpointVisitRoute : Route {
                                 sb.append("{ \"error\": \"Invalid user\" }")
                             }
                             else -> {
-                                student.present = true
+                                transaction {
+                                    student.present = true
+                                }
                                 DBConnector.visitCheckpoint(student, checkpoint)
                                 sb.append("{ \"success\": true }")
                             }
