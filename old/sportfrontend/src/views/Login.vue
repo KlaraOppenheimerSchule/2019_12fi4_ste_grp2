@@ -83,15 +83,15 @@ export default {
       let cookieType = this.$cookie.get("type");
       switch (cookieType) {
         case "2":
-          this.$router.push({ path: "admin" });
+          this.$router.push({ name: "admin" });
           break;
 
         case "1":
-          this.$router.push({ path: "station" });
+          this.$router.push({ name: "checkpoint" });
           break;
 
         default:
-          this.$router.push({ path: "/" });
+          this.$router.push({ name: "home" });
           break;
       }
     },

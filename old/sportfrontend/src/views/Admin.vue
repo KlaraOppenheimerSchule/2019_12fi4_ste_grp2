@@ -10,9 +10,15 @@
       </ion-row>
       <ion-row>
         <ion-col>
-          <router-link to="/admin/class">Klassen bearbeiten</router-link>
-          <div>Schüler austragen</div>
-          <div>Stationen bearbeiten</div>
+          <router-link :to="{ name: 'addclass' }"
+            >Klassen bearbeiten</router-link
+          >
+          <br />
+          <router-link :to="{ name: 'ill' }">Schüler austragen</router-link>
+          <br />
+          <router-link :to="{ name: 'editcheckpoints' }"
+            >Stationen bearbeiten</router-link
+          >
         </ion-col>
       </ion-row>
     </ion-grid>
@@ -28,7 +34,7 @@ export default {
     let type = this.$cookie.get("type");
 
     if (token == undefined || type == undefined) {
-      this.$router.push({ path: "login" });
+      this.$router.push({ name: "login" });
     }
 
     let apiurl = process.env.VUE_APP_API_URL + "session/" + token + "/validate";
@@ -36,7 +42,7 @@ export default {
     axios.get(apiurl).then(response => {
       let resdata = response.data;
       if (resdata[0].valid != true) {
-        this.$router.push({ path: "login" });
+        this.$router.push({ name: "login" });
       }
     });
   }

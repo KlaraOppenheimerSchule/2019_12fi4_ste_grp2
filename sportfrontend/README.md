@@ -1,34 +1,26 @@
-# sportfrontend
+# KlarAktiv (sportapp)
 
-## Project setup
-```
+Die offizielle Sporttag-App der Klara-Oppenheimer-Schule
+
+## Install the dependencies
+```bash
 npm install
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
+### Start the app in development mode (hot-code reloading, error reporting, etc.)
+```bash
+quasar dev
 ```
 
-### Lints and fixes files
-```
+### Lint the files
+```bash
 npm run lint
 ```
 
-### Run your end-to-end tests
-```
-npm run test:e2e
-```
-
-### Run your unit tests
-```
-npm run test:unit
+### Build the app for production
+```bash
+quasar build
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Customize the configuration
+See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).

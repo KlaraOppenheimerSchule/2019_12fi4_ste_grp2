@@ -35,7 +35,7 @@ export default {
         this.$cookie.delete("type");
         this.$store.commit("logOut");
       } else {
-        this.$router.push({ path: "login" });
+        this.$router.push({ name: "login" });
       }
     }
   }
