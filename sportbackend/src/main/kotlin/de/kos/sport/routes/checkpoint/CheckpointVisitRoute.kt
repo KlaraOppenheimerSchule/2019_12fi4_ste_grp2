@@ -18,7 +18,7 @@ class CheckpointVisitRoute : Route {
             val adminUser =
                 transaction { DBConnector.getSessionFromToken(token)!!.user }
 
-            if (adminUser.type == DBConnector.ACCESS_LEVEL_GLOBAL) {
+            if (adminUser.type == DBConnector.ACCESS_LEVEL_CHECKPOINT) {
                 when {
                     id == null -> {
                         sb.append("{ \"error\": \"Id needs to be an integer\" }")
@@ -45,6 +45,8 @@ class CheckpointVisitRoute : Route {
                         }
                     }
                 }
+            } else {
+                sb.append("{ \"error\": \"Insufficient Permissions\" }")
             }
         } else {
             sb.append("{ \"error\": \"Invalid Token\" }")
