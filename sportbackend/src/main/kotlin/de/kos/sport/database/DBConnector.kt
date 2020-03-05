@@ -74,6 +74,7 @@ object DBConnector {
                 this.student = student
                 this.score = checkpoint.score
             }
+            student.score += checkpoint.score
         }
     }
 
