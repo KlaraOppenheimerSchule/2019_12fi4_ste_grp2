@@ -78,7 +78,7 @@ object Classes : IntIdTable() {
     private const val MAX_NAME_SIZE = 255
 
     val score = integer("score")
-    val name = varchar("name", MAX_NAME_SIZE)
+    val name = varchar("name", MAX_NAME_SIZE).uniqueIndex()
 }
 
 /**
