@@ -258,7 +258,7 @@ object DBConnector {
         java.lang.Class.forName("org.postgresql.Driver")
 
         val config = HikariConfig()
-        config.jdbcUrl = "jdbc:postgresql://localhost:5432/sportsapp"
+        config.jdbcUrl = "jdbc:postgresql://exposed.flaflo.xyz:5432/sportsapp"
         config.username = "postgres"
         config.password = File(System.getProperty("user.dir") + "/database.pw").readText()
         config.driverClassName = "org.postgresql.Driver"
