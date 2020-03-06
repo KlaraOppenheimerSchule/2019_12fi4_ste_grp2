@@ -14,26 +14,33 @@
           </tr>
           <tr :key="checkpoint.id + 'input'" v-if="checkpoint.edit">
             <td>
-              <q-input :value="checkpoint.name" :id="'checkpoint-input-name-' + checkpoint.id"></q-input>
+              <q-input
+                v-model="checkpoint.newName"
+                :placeholder="checkpoint.name"
+                :id="'checkpoint-input-name-' + checkpoint.id"
+              ></q-input>
             </td>
             <td>
               <q-input
-                :value="checkpoint.location"
+                v-model="checkpoint.newLocation"
+                :placeholder="checkpoint.location"
                 :id="'checkpoint-input-location-' + checkpoint.id"
               ></q-input>
             </td>
             <td>
               <q-input
+                v-model="checkpoint.password"
                 type="password"
-                placeholder="password"
+                label="password"
                 :id="'checkpoint-input-password-' + checkpoint.id"
                 required
               ></q-input>
             </td>
             <td>
               <q-input
+                v-model="checkpoint.newScore"
                 type="number"
-                :value="checkpoint.score"
+                :placeholder="checkpoint.score"
                 :id="'checkpoint-input-score-' + checkpoint.id"
               ></q-input>
             </td>
@@ -180,12 +187,22 @@ export default {
     sendEdit: async function(checkpoint) {
       let id = checkpoint.id;
 
-      let name = document.getElementById("checkpoint-input-name-" + id).value;
-      let location = document.getElementById("checkpoint-input-location-" + id)
-        .value;
-      let password = document.getElementById("checkpoint-input-password-" + id)
-        .value;
-      let score = document.getElementById("checkpoint-input-score-" + id).value;
+      let name = checkpoint.newName;
+      if (name == undefined) {
+        name = checkpoint.name;
+      }
+
+      let location = checkpoint.newLocation;
+      if (location == undefined) {
+        location = checkpoint.location;
+      }
+
+      let password = checkpoint.password;
+
+      let score = checkpoint.newScore;
+      if (score == undefined) {
+        score = checkpoint.score;
+      }
 
       let shapass = await this.sha256(password);
 
@@ -316,7 +333,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 table {
   width: 100%;
 }
