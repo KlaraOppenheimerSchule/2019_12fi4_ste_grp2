@@ -45,7 +45,7 @@ class Checkpoint(id: EntityID<Int>) : IntEntity(id) {
  * Represents a indexed tale of students
  */
 object Students : IntIdTable() {
-    val studentId = integer("studentId").primaryKey()
+    val studentId = integer("studentId").uniqueIndex()
     val studentClass = reference("class", Classes)
     val score = integer("score").default(0)
     val present = bool("present").default(true)
