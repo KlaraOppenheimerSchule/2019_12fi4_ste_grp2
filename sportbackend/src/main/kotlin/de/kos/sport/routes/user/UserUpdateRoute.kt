@@ -16,8 +16,6 @@ class UserUpdateRoute : Route {
 
         if (userId == null) {
             sb.append("{ \"error\": \"Id needs to be an integer\" }")
-        } else if (password.isEmpty()) {
-            sb.append("{ \"error\": \"Password cant be empty\" }")
         } else if (username.isEmpty()) {
             sb.append("{ \"error\": \"Username cant be empty\" }")
         } else if (DBConnector.validateToken(token)) {
@@ -30,7 +28,9 @@ class UserUpdateRoute : Route {
                     sb.append("{ \"error\": \"User not found\" }")
                 } else {
                     transaction {
-                        user.password = password
+                        if (password.isNotEmpty()) {
+                            user.password = password
+                        }
                         user.name = username
                     }
                 }
