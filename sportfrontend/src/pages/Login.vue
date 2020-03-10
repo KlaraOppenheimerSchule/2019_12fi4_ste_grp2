@@ -2,9 +2,9 @@
   <q-page class="q-pa-md column q-gutter-md">
     <div class="text-h4">Login</div>
     <div class="column">
-      <q-input label="Username" class="userInput" type="text" v-model="user"></q-input>
-      <q-input label="Passwort" class="passInput" type="password" v-model="pass"></q-input>
-      <q-btn :disabled="!isEnabled" class="full-width" @click="login()">Login</q-btn>
+      <q-input outlined label="Username" class="userInput q-mt-md" type="text" v-model="user"></q-input>
+      <q-input outlined label="Passwort" class="passInput q-mt-md" type="password" v-model="pass"></q-input>
+      <q-btn color="primary" :disabled="!isEnabled" class="full-width q-mt-md" @click="login()">Login</q-btn>
       <div class="text-body2 text-danger" v-if="error != ''" v-html="error"></div>
     </div>
   </q-page>
@@ -61,10 +61,10 @@ export default {
 
       this.$axios.get(apiurl).then(response => {
         let resdata = response.data;
-        
-        let id = resdata[0].checkpoints[0].id;
-        this.$router.push({ path: "/checkpoint/" + id });
 
+        let id = resdata[0].checkpoints[0].id;
+        this.$q.cookies.set("checkpoint", id, { expires: "1D" });
+        this.$router.push({ path: "/checkpoint/" + id });
       });
     },
     redirectCookie: function(response) {

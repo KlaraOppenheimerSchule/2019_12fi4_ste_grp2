@@ -97,7 +97,8 @@ export default {
         if (resdata[0].students != undefined) {
           this.$q.notify({
             message: amount + " Schüler wurden erfolgreich hinzgefügt",
-            color:"positive"
+            color: "positive",
+            position: "top"
           });
           this.refresh();
         }
@@ -115,20 +116,23 @@ export default {
           if (resdata[0].class != undefined) {
             this.$q.notify({
               message: "Klasse erfolgreich hinzugefügt",
-              color: "positive"
+              color: "positive",
+              position: "top"
             });
             this.refresh();
           } else {
             this.$q.notify({
               message: "Klasse konnte nicht hinzugefügt werden",
-              color: "negative"
+              color: "negative",
+              position: "top"
             });
           }
         });
       } else {
         this.$q.notify({
           message: "Name zu kurz",
-          color: "negative"
+          color: "negative",
+          position: "top"
         });
       }
     }

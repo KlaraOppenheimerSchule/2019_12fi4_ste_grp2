@@ -84,7 +84,7 @@
               type="number"
               name="newUserScore"
               id="newUserScore"
-              v-model="newUser.number"
+              v-model="newUser.score"
             ></q-input>
           </td>
         </tr>
@@ -102,7 +102,11 @@ export default {
     return {
       checkpoints: [],
       newUser: {
-        visible: false
+        visible: false,
+        password: "",
+        location: "",
+        name: "",
+        score: ""
       }
     };
   },
@@ -141,26 +145,21 @@ export default {
       this.val = target.value;
     },
     clearNewInput: function() {
-      document.getElementById("newUserName").value = "";
-      document.getElementById("newUserLocation").value = "";
-      document.getElementById("newUserPassword").value = "";
-      document.getElementById("newUserScore").value = 1;
+      this.newUser.name = "";
+      this.newUser.location = "";
+      this.newUser.password = "";
+      this.newUser.score = "";
     },
     newUserInput: async function() {
       if (this.newUser.visible === false) {
         this.newUser.visible = !this.newUser.visible;
       } else {
-        let name = document.getElementById("newUserName").value;
-        let location = document.getElementById("newUserLocation").value;
-        let password = document.getElementById("newUserPassword").value;
-        let score = document.getElementById("newUserScore").value;
+        let name = this.newUser.name;
+        let location = this.newUser.location;
+        let password = this.newUser.password;
+        let score = this.newUser.score;
 
-        if (
-          name !== undefined &&
-          location !== undefined &&
-          password !== undefined &&
-          score !== undefined
-        ) {
+        if (name !== "" && location !== undefined && score !== undefined) {
           let shapass = await this.sha256(password);
           this.createCheckpoint(name, location, shapass, score);
         }
@@ -198,13 +197,19 @@ export default {
       }
 
       let password = checkpoint.password;
+      if(password == undefined){
+        password = "";
+      }
 
       let score = checkpoint.newScore;
       if (score == undefined) {
         score = checkpoint.score;
       }
 
-      let shapass = await this.sha256(password);
+      let shapass = "";
+      if (password != "") {
+        shapass = await this.sha256(password);
+      }
 
       await this.updateUser(checkpoint.user, name, shapass);
       await this.updateCheckpoint(id, name, location, checkpoint.user, score);
@@ -236,7 +241,7 @@ export default {
     },
     createCheckpoint: async function(name, location, password, score) {
       let token = this.$q.cookies.get("token");
-
+      console.log(name + password);
       let user = await this.createUser(name, password);
 
       let apiurl =
